@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neavy_blue">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:textSize="17dp"
+        android:gravity="right"
+        android:textColor="#ffffff"
+        android:padding="10dp"
+        android:paddingRight="40dp"
+        android:text="View Type : "/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingBottom="0dp"
+        android:layout_below="@+id/name"
+        android:id="@+id/line"
+        android:background="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/watched"
+        android:layout_width="114dp"
+        android:layout_below="@+id/line"
+        android:gravity="center"
+        android:layout_height="74dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="20dp"
+        android:drawableTop="@drawable/ic_eye"
+        android:text="Watched"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/wish"
+        android:layout_width="114dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignBottom="@+id/watched"
+        android:layout_toEndOf="@+id/watched"
+        android:layout_toRightOf="@+id/watched"
+        android:drawableTop="@drawable/ic_wishlist"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="Wishlist"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/list"
+        android:layout_width="114dp"
+        android:layout_below="@+id/line"
+        android:layout_toRightOf="@+id/wish"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_height="74dp"
+        android:layout_marginTop="20dp"
+        android:drawableTop="@drawable/ic_list"
+        android:text="Add List"
+        android:textSize="15dp" />
+
+</RelativeLayout>

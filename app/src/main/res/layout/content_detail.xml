@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#393e3a"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.asif.movies.MainActivity"
+    tools:showIn="@layout/activity_detail">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ad">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:showIn="@layout/activity_detail">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/genre"
+                android:layout_marginLeft="0dp"
+                android:textSize="12dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="4dp"
+                android:text="Genres"
+                android:textColor="@color/white"
+                android:layout_marginStart="1dp" />
+
+            <TextView
+                android:id="@+id/releasedate"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:textColor="@color/white"
+                android:layout_below="@+id/genre"
+                android:text="Year  .  Time"
+                android:paddingBottom="10dp"
+                android:textSize="12dp" />
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="250dp"
+                android:layout_height="1dp"
+                android:layout_below="@+id/releasedate"
+                android:background="@color/black"
+                android:paddingBottom="0dp" />
+
+            <TextView
+                android:id="@+id/imdbrating"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/genre"
+                android:layout_marginEnd="9dp"
+                android:layout_marginRight="9dp"
+                android:drawableLeft="@drawable/ic_star"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/plotsynopsis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingLeft="10dp"
+                android:layout_below="@+id/line"
+                android:layout_gravity="center_vertical|right"
+                android:paddingTop="20dp"
+                android:text="Something Something Something Something Something "
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:maxLines="3"
+                android:textStyle="normal" />
+
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="250dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/plotsynopsis"
+                    android:background="@color/black"
+                    android:paddingBottom="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:text="Wikipedia"
+                    android:gravity="center"
+                    android:id="@+id/wiki"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/colorAccent"
+                    android:drawableLeft="@drawable/wikipedia50"
+                    android:textSize="16dp"
+                    android:layout_below="@+id/line2"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/imdblink"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/wiki"
+                    android:layout_alignBottom="@+id/wiki"
+                    android:layout_marginLeft="41dp"
+                    android:layout_toLeftOf="@+id/imdbrating"
+                    android:layout_toStartOf="@+id/imdbrating"
+                    android:drawableLeft="@drawable/imdb48"
+                    android:gravity="center"
+                    android:text="IMDB"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+
+                <View
+                    android:id="@+id/line3"
+                    android:layout_width="250dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/wiki"
+                    android:background="@color/black"
+                    android:paddingBottom="0dp" />
+
+            </RelativeLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+    </LinearLayout>
+
+</RelativeLayout>
