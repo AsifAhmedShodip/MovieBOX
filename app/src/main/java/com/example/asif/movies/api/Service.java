@@ -12,14 +12,13 @@ import com.example.asif.movies.model.MediaID;
 import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.model.MoviesResponse;
 import com.example.asif.movies.model.OmdbMovieResponse;
-import com.example.asif.movies.model.WatchList;
 import com.example.asif.movies.model.WatchListBody;
 import com.example.asif.movies.model.WatchListResponse;
+import com.example.asif.movies.model.MovieVideoResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -84,4 +83,7 @@ public interface Service {
     //OMDB
     @GET(".")
     Call<OmdbMovieResponse> getImdbRating(@Query("apikey") String apikey , @Query("i") String query);
+
+    @GET("movie/{movie_id}/videos")
+    Call<MovieVideoResponse> getMovieVideoResponse(@Path("movie_id") int movie_id, @Query("api_key") String apikey);
 }

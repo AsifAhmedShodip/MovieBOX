@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "623531063585",
+    "firebase_url": "https://moviebox-31243.firebaseio.com",
+    "project_id": "moviebox-31243",
+    "storage_bucket": "moviebox-31243.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623531063585:android:147b453f5049fda3",
+        "android_client_info": {
+          "package_name": "com.example.asif.movies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "623531063585-p98krpdf9mvm9sqekq2j1smq65jbamae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.asif.movies",
+            "certificate_hash": "ffd2082e0a73dc196226d8740bf2254b7e2e1b3b"
+          }
+        },
+        {
+          "client_id": "623531063585-d0878ld2hpfaqd0r9pbjglvq1oijomuo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCECKOPVROWTuyAvXXAAXseOE9_eSFErLg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "623531063585-d0878ld2hpfaqd0r9pbjglvq1oijomuo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

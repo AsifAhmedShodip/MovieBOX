@@ -30,6 +30,16 @@ public class AccountDetails {
     @Expose
     private String username;
 
+    private static AccountDetails currentUser;
+
+    public static AccountDetails getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(AccountDetails currentUser) {
+        AccountDetails.currentUser = currentUser;
+    }
+
     public Avatar getAvatar() {
         return avatar;
     }

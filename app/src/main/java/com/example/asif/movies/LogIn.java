@@ -18,6 +18,11 @@ import com.example.asif.movies.model.CreateList;
 import com.example.asif.movies.model.CreateListResponse;
 import com.example.asif.movies.model.ListMovie;
 import com.example.asif.movies.model.ListResponse;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -29,7 +34,6 @@ public class LogIn extends AppCompatActivity {
     private Button button;
     String rToken;
     static String session_id = "b5bda44a7e59a9b33e9a70399724ae27c4046540";
-    private AccountDetails accountDetails;
     private ListResponse listResponse;
     public String string;
     @Override
@@ -40,8 +44,6 @@ public class LogIn extends AppCompatActivity {
 
         //config();
         accountDetails();
-        getList();
-        //checkWatchList();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +53,7 @@ public class LogIn extends AppCompatActivity {
         });
     }
 
-    private void checkWatchList() {
+  /*  private void checkWatchList() {
         boolean watchedMovieList = false;
         for(int i=0;i<listResponse.getList().size();i++)
         {
@@ -85,7 +87,7 @@ public class LogIn extends AppCompatActivity {
                 }
             });
         }
-    }
+    }*/
 
     public void accountDetails() {
         Client Client = new Client();
@@ -94,8 +96,8 @@ public class LogIn extends AppCompatActivity {
         call.enqueue(new Callback<AccountDetails>() {
             @Override
             public void onResponse(Call<AccountDetails> call, Response<AccountDetails> response) {
-                 accountDetails = response.body();
-                 string = response.body().getUsername();
+                 AccountDetails.setCurrentUser(response.body());
+                 firebaseDataLoadUp(response.body().getUsername());
             }
 
             @Override
@@ -105,8 +107,29 @@ public class LogIn extends AppCompatActivity {
             }
         });
     }
+    //loading up firebase to use in next activity
+    private void firebaseDataLoadUp(String username) {
+        final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(username);
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-    private void getList() {
+                for(DataSnapshot users : dataSnapshot.getChildren()){
+                    //do something
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    // I was creating a Watched Movies List here.. I dont
+    // need it anymore.because i am doing this in firebase.
+
+
+    /*private void getList() {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
         Call<ListResponse> call = apiService.getListResponse(BuildConfig.THE_MOVIE_DB_API_TOKEN,session_id);
@@ -123,7 +146,7 @@ public class LogIn extends AppCompatActivity {
                 Toast.makeText(LogIn.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
     private void config() {
 

@@ -92,49 +92,118 @@
                 <View
                     android:id="@+id/line2"
                     android:layout_width="250dp"
-                    android:layout_height="1dp"
+                    android:layout_height="0dp"
                     android:layout_marginTop="20dp"
                     android:layout_below="@+id/plotsynopsis"
                     android:background="@color/black"
                     android:paddingBottom="0dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:text="Wikipedia"
-                    android:gravity="center"
-                    android:id="@+id/wiki"
-                    android:textColor="@color/white"
-                    android:drawableTint="@color/colorAccent"
-                    android:drawableLeft="@drawable/wikipedia50"
-                    android:textSize="16dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:background="@color/neavy_blue"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="0dp"
+                    android:layout_weight="5"
+                    android:id="@+id/linear"
                     android:layout_below="@+id/line2"
-                    android:layout_marginTop="10dp"/>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/imdblink"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/wiki"
-                    android:layout_alignBottom="@+id/wiki"
-                    android:layout_marginLeft="41dp"
-                    android:layout_toLeftOf="@+id/imdbrating"
-                    android:layout_toStartOf="@+id/imdbrating"
-                    android:drawableLeft="@drawable/imdb48"
-                    android:gravity="center"
-                    android:text="IMDB"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/trailer"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/trailer"
+                        android:layout_marginRight="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" />
+
+
+                    <TextView
+                        android:id="@+id/wiki"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/wikipedia50"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"/>
+
+
+                    <TextView
+                        android:id="@+id/imdblink"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/imdb48"
+                        android:layout_marginLeft="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" />
+
+                </LinearLayout>
 
                 <View
                     android:id="@+id/line3"
                     android:layout_width="250dp"
-                    android:layout_height="1dp"
+                    android:layout_height="0dp"
                     android:layout_marginTop="5dp"
-                    android:layout_below="@+id/wiki"
+                    android:layout_below="@+id/linear"
                     android:background="@color/black"
                     android:paddingBottom="0dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:background="@color/neavy_blue"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="0dp"
+                    android:layout_weight="5"
+                    android:id="@+id/linear2"
+                    android:layout_below="@+id/line3"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+
+                    <TextView
+                        android:id="@+id/watched"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_eye"
+                        android:layout_marginRight="0dp"
+                        android:text="   Watched"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" />
+
+                    <TextView
+                        android:id="@+id/wish"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="1"
+                        android:text="      Wishlist"
+                        android:textColor="@color/black"
+                        android:drawableTop="@drawable/ic_wishlist"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"/>
+
+                    <TextView
+                        android:id="@+id/list"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:text="     Add to List"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_list"
+                        android:layout_marginLeft="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" />
+
+                </LinearLayout>
 
             </RelativeLayout>
 

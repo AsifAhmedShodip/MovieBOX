@@ -17,7 +17,7 @@ import android.widget.TextView;
 public class DialogMenu implements View.OnClickListener {
     private Dialog dialog;
     private OnDialogMenuListener listener;
-    TextView name,watched , list , wish;
+    TextView reWatched ,  notWatched;
 
     public DialogMenu(Context context) {
         dialog = new Dialog(context, R.style.DialogTheme);
@@ -30,13 +30,10 @@ public class DialogMenu implements View.OnClickListener {
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.show();
 
-        name = (TextView) dialog.findViewById(R.id.name);
-        watched = (TextView) dialog.findViewById(R.id.watched);
-        wish = (TextView) dialog.findViewById(R.id.wish);
-        list = (TextView) dialog.findViewById(R.id.list);
-        watched.setOnClickListener(this);
-        wish.setOnClickListener(this);
-        list.setOnClickListener(this);
+        reWatched = (TextView) dialog.findViewById(R.id.rewatched);
+        notWatched = (TextView) dialog.findViewById(R.id.notWatched);
+        reWatched.setOnClickListener(this);
+        notWatched.setOnClickListener(this);
 
     }
 
@@ -47,23 +44,19 @@ public class DialogMenu implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.watched:
-                listener.onWatchedPress();
-                //dialog.dismiss();
+            case R.id.rewatched:
+                listener.onReWatchedPress();
+                dialog.dismiss();
                 break;
-            case R.id.wish:
-                listener.onWishPress();
-                break;
-            case R.id.list:
-                listener.onListPress();
-                //dialog.dismiss();
+            case R.id.notWatched:
+                listener.onNotWatchedPress();
+                dialog.dismiss();
                 break;
         }
     }
 
     public interface OnDialogMenuListener{
-        void onWatchedPress();
-        void onWishPress();
-        void onListPress();
+        void onReWatchedPress();
+        void onNotWatchedPress();
     }
 }
