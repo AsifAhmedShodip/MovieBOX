@@ -1,7 +1,10 @@
 package com.example.asif.movies;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -10,21 +13,36 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.asif.movies.Account.AccountDetails;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.asif.movies.WebView_Link.SignUpWebview;
+import com.example.asif.movies.adapter.CastAdapter;
+import com.example.asif.movies.adapter.MoviesAdapter;
+import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.WebView_Link.BrowserWebview;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
 import com.example.asif.movies.model.AccountStates;
+import com.example.asif.movies.model.Cast_crew.Cast;
+import com.example.asif.movies.model.Cast_crew.CastResponse;
 import com.example.asif.movies.model.Genre;
 import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.model.MovieVideo;
@@ -43,8 +61,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.example.asif.movies.LogIn.session_id;
 import static com.example.asif.movies.MainActivity.movieStatic;
 
 /**
@@ -52,14 +68,18 @@ import static com.example.asif.movies.MainActivity.movieStatic;
  */
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener{
-    TextView nameOfMovie, plotSynopsis, userRating, releaseYear,imdbRating,wiki,imdbLink ,trailer;
-    ImageView imageView;
+    TextView nameOfMovie, plotSynopsis, userRating, releaseYear,imdbRating,wiki,imdbLink ,trailer,director;
+    ImageView imageView , poster;
     private ProgressDialog progress;
     TextView genres,watched , list , wish;
     Movie movie,movieDetails;
     String movieCount = "0",totalCount = "0";
-
+    CoordinatorLayout screen;
+    String session_id;
+    RecyclerView recyclerView_cast;
+    CastAdapter castAdapter ,castAdapter2;
     private boolean watchlistStatus,watchedMovieStatus,plot = false;
+    String directorName;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -71,9 +91,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         movie = movieStatic;
         getSupportActionBar().setTitle(movie.getTitle());
+        screen = findViewById(R.id.main_content);
         initCollapsingToolbar();
 
         imageView = (ImageView) findViewById(R.id.thumbnail_image_header);
+        director = findViewById(R.id.director);
+        poster = (ImageView) findViewById(R.id.poster);
         nameOfMovie = (TextView) findViewById(R.id.title);
         genres = (TextView) findViewById(R.id.genre);
         plotSynopsis = (TextView) findViewById(R.id.plotsynopsis);
@@ -86,6 +109,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         wish = (TextView) findViewById(R.id.wish);
         list = (TextView) findViewById(R.id.list);
         trailer = findViewById(R.id.trailer);
+        recyclerView_cast = findViewById(R.id.recycler_cast);
 
         progress=new ProgressDialog(this);
         progress.setMessage("Loading ...");
@@ -97,6 +121,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setTextViewDrawableColor(wish, R.color.black);
         setTextViewDrawableColor(watched, R.color.black);
         setTextViewDrawableColor(list, R.color.black);
+
+        SharedPreferences sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        session_id = sharedpreferences.getString("Session_id","");
 
         checkWatchedMoviesStatus();
         checkWatchListStatus();
@@ -141,6 +169,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         watched.setOnClickListener(this);
         wish.setOnClickListener(this);
         list.setOnClickListener(this);
+        imageView.setOnClickListener(this);
+        director.setOnClickListener(this);
     }
 
     private void getTrailer() {
@@ -199,7 +229,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 setMovieYearAndRuntime(response.body().getReleaseDate(),response.body().getRuntime());
                 plotSynopsis.setText(response.body().getOverview());
                 setBackdrop(response.body().getBackdropPath());
+                setPoster(response.body().getPosterPath());
                 setImdbRating(response.body().getImdbId());
+                setCast(response.body().getId());
                 progress.dismiss();
             }
 
@@ -213,11 +245,61 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+    private void setCast(Integer id) {
+        Client Client = new Client();
+        Service apiService = Client.getClient().create(Service.class);
+        Call<CastResponse> call = apiService.getCastDetails(id,BuildConfig.THE_MOVIE_DB_API_TOKEN);
+        call.enqueue(new Callback<CastResponse>() {
+            @Override
+            public void onResponse(Call<CastResponse> call, Response<CastResponse> response) {
+                for(int i = 0; i<response.body().getCrew().size();i++){
+                    if(response.body().getCrew().get(i).getJob().equals("Director")){
+                        directorName = response.body().getCrew().get(i).getName();
+                        String name = "<b>"+directorName+"</b>";
+                        director.append(Html.fromHtml(name));
+                        break;
+                    }
+                }
+                castAdapter = new CastAdapter(DetailActivity.this, response.body().getCast());
+                recyclerView_cast.smoothScrollToPosition(0);
+                recyclerView_cast.setLayoutManager(new LinearLayoutManager(DetailActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                recyclerView_cast.setItemAnimator(new DefaultItemAnimator());
+                recyclerView_cast.setAdapter(castAdapter);
+                castAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onFailure(Call<CastResponse> call, Throwable t) {
+                progress.dismiss();
+                Log.d("Error", t.getMessage());
+                Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void setPoster(Object posterPath) {
+        final String path = "https://image.tmdb.org/t/p/w500" + posterPath;
+        Glide.with(this)
+                .load(path)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.load)
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform())
+                .into(poster);
+    }
+
     private void setBackdrop(String backdropPath) {
         final String poster = "https://image.tmdb.org/t/p/w500" + backdropPath;
         Glide.with(this)
                 .load(poster)
-                .placeholder(R.drawable.load)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.load)
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform())
                 .into(imageView);
     }
 
@@ -245,7 +327,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onFailure(Call<OmdbMovieResponse> call, Throwable t) {
-                Log.d("Error", t.getMessage());
+                //Log.d("Error", t.getMessage());
                 Toast.makeText(DetailActivity.this, "Error Fetching Data from OMDB", Toast.LENGTH_SHORT).show();
 
             }
@@ -383,18 +465,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.plotsynopsis:{
-                if(!plot) {
-                    plotSynopsis.setMaxLines(Integer.MAX_VALUE);
-                    plot = true;
-                }
-                else {
-                    plotSynopsis.setMaxLines(3);
-                    plot = false;
-                }
-                break;
-            }
-
             case R.id.watched: {
                 afterWatchedPressed();
                 break;
@@ -406,6 +476,19 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.list: {
                 afterListPressed();
                 break;
+            }
+            case R.id.thumbnail_image_header:{
+                Intent intent = new Intent(DetailActivity.this, DetailActivityForCoverPhoto.class);
+                intent.putExtra("Movie Id",movie.getId());
+                startActivity(intent);
+                break;
+            }
+            case R.id.director:{
+                String url = "https://en.wikipedia.org/wiki/";
+                directorName.replace(" ","_");
+                Intent intent = new Intent(this,SignUpWebview.class); // we are using SignUpWebview Class becuase BrowserWebview is complex
+                intent.putExtra("url",url+directorName);
+                startActivity(intent);
             }
         }
     }
@@ -470,7 +553,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<WatchListResponse> call = apiService.postWatchList(BuildConfig.THE_MOVIE_DB_API_TOKEN, session_id,watchListBody);
+        Call<WatchListResponse> call = apiService.postWatchList(BuildConfig.THE_MOVIE_DB_API_TOKEN,session_id,watchListBody);
         call.enqueue(new Callback<WatchListResponse>() {
             @Override
             public void onResponse(Call<WatchListResponse> call, Response<WatchListResponse> response) {

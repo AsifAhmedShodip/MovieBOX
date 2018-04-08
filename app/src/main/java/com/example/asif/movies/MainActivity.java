@@ -6,39 +6,21 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.asif.movies.Account.AccountDetails;
 import com.example.asif.movies.adapter.MoviesAdapter;
-import com.example.asif.movies.api.Client;
-import com.example.asif.movies.api.Service;
-import com.example.asif.movies.authentication.Request_Token;
 import com.example.asif.movies.model.Movie;
-import com.example.asif.movies.model.MoviesResponse;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.example.asif.movies.LogIn.session_id;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -90,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        loadJSON();
+        //loadJSON();
         movieList = new ArrayList<>();
         adapter = new MoviesAdapter(this, movieList);
 
@@ -106,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
-
+/*
     private void loadJSON(){
         try{
             if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
@@ -141,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Error", e.getMessage());
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){

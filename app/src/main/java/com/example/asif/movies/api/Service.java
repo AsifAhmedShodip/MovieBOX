@@ -1,9 +1,10 @@
 package com.example.asif.movies.api;
 
-import com.example.asif.movies.Account.AccountDetails;
+import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.authentication.Request_Token;
 import com.example.asif.movies.authentication.Session_Id;
 import com.example.asif.movies.model.AccountStates;
+import com.example.asif.movies.model.Cast_crew.CastResponse;
 import com.example.asif.movies.model.CheckItemStatus;
 import com.example.asif.movies.model.CreateList;
 import com.example.asif.movies.model.CreateListResponse;
@@ -15,6 +16,7 @@ import com.example.asif.movies.model.OmdbMovieResponse;
 import com.example.asif.movies.model.WatchListBody;
 import com.example.asif.movies.model.WatchListResponse;
 import com.example.asif.movies.model.MovieVideoResponse;
+import com.example.asif.movies.model.image.ImageResoponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -29,7 +31,8 @@ import retrofit2.http.Query;
 
 public interface Service {
     @GET("movie/popular")
-    Call<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language);
+    Call<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language,
+                                          @Query("page") int page);
 
     @GET("movie/top_rated")
     Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey);
@@ -86,4 +89,12 @@ public interface Service {
 
     @GET("movie/{movie_id}/videos")
     Call<MovieVideoResponse> getMovieVideoResponse(@Path("movie_id") int movie_id, @Query("api_key") String apikey);
+
+    @GET("movie/{movie_id}/images")
+    Call<ImageResoponse> getImages(@Path("movie_id") int movie_id,@Query("api_key") String apikey,
+                                   @Query("language") String language , @Query("include_image_language")
+                                   String include_image_language) ;
+
+    @GET("movie/{movie_id}/credits")
+    Call<CastResponse> getCastDetails(@Path("movie_id") int movie_id ,@Query("api_key") String apikey);
 }

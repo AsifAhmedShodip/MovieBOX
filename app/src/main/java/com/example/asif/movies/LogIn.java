@@ -1,22 +1,22 @@
 package com.example.asif.movies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.asif.movies.Account.AccountDetails;
+import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
 import com.example.asif.movies.authentication.Request_Token;
 import com.example.asif.movies.authentication.Session_Id;
-import com.example.asif.movies.model.CreateList;
-import com.example.asif.movies.model.CreateListResponse;
-import com.example.asif.movies.model.ListMovie;
 import com.example.asif.movies.model.ListResponse;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,33 +24,90 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LogIn extends AppCompatActivity {
     private Button button;
+    TextView register;
     String rToken;
-    static String session_id = "b5bda44a7e59a9b33e9a70399724ae27c4046540";
+    String session_id = "";
     private ListResponse listResponse;
     public String string;
+
+    SharedPreferences sharedpreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-        button = findViewById(R.id.button);
+        button = findViewById(R.id.signinbutton);
+        register = findViewById(R.id.signUpbutton);
 
         //config();
-        accountDetails();
+        //accountDetails();
+        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent (getApplicationContext(),MainActivity.class);
-                startActivity(i);
+                String s_id = sharedpreferences.getString("Session_id","");
+                if(!s_id.equals("")){
+                    session_id = s_id;
+                    accountDetails(session_id);
+                }
+                else{
+                    checkToken();
+                    //config();
+                }
             }
         });
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //config();
+                /*String url = "https://www.themoviedb.org/account/signup";
+                Intent intent = new Intent(getApplicationContext(),SignUpWebview.class);
+                intent.putExtra("url",url);
+                startActivity(intent);*/
+            }
+        });
+    }
+
+    private void checkToken() {
+        String token = sharedpreferences.getString("Token","");
+        if(!token.equals("")){
+            Client Client = new Client();
+            Service apiService = Client.getClient().create(Service.class);
+            Call<Session_Id> call = apiService.getSessionID(BuildConfig.THE_MOVIE_DB_API_TOKEN,token);
+            call.enqueue(new Callback<Session_Id>() {
+                @Override
+                public void onResponse(Call<Session_Id> call, Response<Session_Id> response) {
+                    if(response.body() instanceof Session_Id) {
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("Session_id", response.body().getSessionId());
+                        editor.commit();
+                        Log.d("Error", response.body().getSessionId());
+                        session_id = response.body().getSessionId();
+                        accountDetails(session_id);
+                    }
+                    else {
+                        config();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Session_Id> call, Throwable t) {
+                    Log.d("Error", t.getMessage());
+                    Toast.makeText(getApplicationContext(),"Error Fetching Data!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+        else {
+            config();
+        }
     }
 
   /*  private void checkWatchList() {
@@ -89,15 +146,19 @@ public class LogIn extends AppCompatActivity {
         }
     }*/
 
-    public void accountDetails() {
+    public void accountDetails(String s_id) {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<AccountDetails> call = apiService.getAccountDetails(BuildConfig.THE_MOVIE_DB_API_TOKEN,session_id);
+        Call<AccountDetails> call = apiService.getAccountDetails(BuildConfig.THE_MOVIE_DB_API_TOKEN,s_id);
         call.enqueue(new Callback<AccountDetails>() {
             @Override
             public void onResponse(Call<AccountDetails> call, Response<AccountDetails> response) {
                  AccountDetails.setCurrentUser(response.body());
-                 firebaseDataLoadUp(response.body().getUsername());
+                 //if(response.body().getUsername()!=null)
+                    //firebaseDataLoadUp(response.body().getUsername());
+
+                Intent i = new Intent (getApplicationContext(),MainPage.class);
+                startActivity(i);
             }
 
             @Override
@@ -125,29 +186,6 @@ public class LogIn extends AppCompatActivity {
         });
     }
 
-    // I was creating a Watched Movies List here.. I dont
-    // need it anymore.because i am doing this in firebase.
-
-
-    /*private void getList() {
-        Client Client = new Client();
-        Service apiService = Client.getClient().create(Service.class);
-        Call<ListResponse> call = apiService.getListResponse(BuildConfig.THE_MOVIE_DB_API_TOKEN,session_id);
-        call.enqueue(new Callback<ListResponse>() {
-            @Override
-            public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
-                listResponse = response.body();
-                checkWatchList();
-            }
-
-            @Override
-            public void onFailure(Call<ListResponse> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-                Toast.makeText(LogIn.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
     private void config() {
 
         try{
@@ -164,6 +202,9 @@ public class LogIn extends AppCompatActivity {
                 public void onResponse(Call<Request_Token> call, Response<Request_Token> response) {
                     Request_Token token = (Request_Token) response.body();
                     rToken = token.getRequestToken();
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("Token", rToken);
+                    editor.commit();
                     String url = "https://www.themoviedb.org/authenticate/"+token.getRequestToken();
                     Intent i = new Intent (Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));

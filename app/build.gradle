@@ -18,6 +18,7 @@ android {
         buildTypes.each {
             it.buildConfigField 'String', 'THE_MOVIE_DB_API_TOKEN', MyTheMovieDBApiToken
             it.buildConfigField 'String', 'THE_OMDB_API', MyOmdbApi
+            it.buildConfigField 'String', 'MySessionId', MySessionId
         }
     }
 }
@@ -30,18 +31,23 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile 'com.android.support:appcompat-v7:27.0.1'
-    compile 'com.android.support:support-v4:27.0.1'
-    compile 'com.android.support:design:27.0.1'
-    compile 'com.android.support:recyclerview-v7:27.0.1'
-    compile 'com.android.support:cardview-v7:27.0.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.android.support:appcompat-v7:27.1.0'
+    compile 'com.android.support:support-v4:27.1.0'
+    compile 'com.android.support:design:27.1.0'
+    compile 'com.android.support:recyclerview-v7:27.1.0'
+    compile 'com.android.support:cardview-v7:27.1.0'
+    compile 'com.github.bumptech.glide:glide:4.6.1'
     compile 'com.github.ivbaranov:materialfavoritebutton:0.1.4'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.github.clans:fab:1.6.4'
+    compile 'com.android.support:palette-v7:27.1.0'
 
 }
+
+
+
+
 
 
 apply plugin: 'com.google.gms.google-services'

@@ -89,6 +89,16 @@ public class Movie {
     @Expose
     private Integer voteCount;
 
+    static List<Movie> movieList;
+
+    public static List<Movie> getMovieList() {
+        return movieList;
+    }
+
+    public static void setMovieList(List<Movie> movieList) {
+        Movie.movieList = movieList;
+    }
+
     public Boolean getAdult() {
         return adult;
     }

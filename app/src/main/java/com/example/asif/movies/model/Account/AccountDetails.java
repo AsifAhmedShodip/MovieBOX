@@ -1,4 +1,4 @@
-package com.example.asif.movies.Account;
+package com.example.asif.movies.model.Account;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

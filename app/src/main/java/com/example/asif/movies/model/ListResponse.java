@@ -9,7 +9,7 @@ import java.util.List;
  * Created by asif on 31-Mar-18.
  */
 
-public class ListResponse {
+public class    ListResponse {
     @SerializedName("page")
     @Expose
     private Integer page;

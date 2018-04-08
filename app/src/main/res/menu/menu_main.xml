@@ -3,23 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search"
-        android:icon="@drawable/ic_search_colored"
-        android:iconTint="@color/colorAccent"
+        android:icon="@drawable/ic_search01"
         android:orderInCategory="20"
         android:title="Search"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_settings"
-        android:title="@string/action_settings"
-        android:iconTint="@color/colorAccent"
-        android:orderInCategory="20"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/filter"
         android:title="@string/action_settings"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/ic_filter_white"
+        android:iconTint="@color/white"
         android:orderInCategory="20"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/edit_cover_photo"
+        android:title="Edit Cover Photo"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/logout"
+        android:title="Sign Out"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
 </menu>

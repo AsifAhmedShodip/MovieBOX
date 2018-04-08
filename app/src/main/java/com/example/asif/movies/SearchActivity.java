@@ -40,13 +40,13 @@ public class SearchActivity extends AppCompatActivity {
         getActivity().setTitle("Search Results");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
         movieList = new ArrayList<>();
-        adapter = new MoviesAdapter(this, movieList);
+        adapter = new MoviesAdapter(SearchActivity.this, movieList);
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 6));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 8));
         }
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -111,7 +111,7 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                     List<Movie> movies = response.body().getResults();
-                    recyclerView.setAdapter(new MoviesAdapter(getApplicationContext(), movies));
+                    recyclerView.setAdapter(new MoviesAdapter(SearchActivity.this, movies));
                     recyclerView.smoothScrollToPosition(0);
                 }
 
