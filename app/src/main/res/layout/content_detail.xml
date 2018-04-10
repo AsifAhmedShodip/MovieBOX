@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,7 +37,7 @@
                 android:paddingTop="7dp"
                 android:paddingBottom="2dp"
                 android:text="Genres"
-                android:textColor="@color/white"
+                android:textColor="#7F848A"
                 android:layout_marginStart="1dp" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:textColor="@color/white"
+                android:textColor="#7F848A"
                 android:layout_below="@+id/genre"
                 android:text="Year  .  Time"
                 android:paddingBottom="2dp"
@@ -56,11 +56,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:textColor="@color/white"
+                android:textColor="#7F848A"
                 android:layout_below="@+id/releasedate"
                 android:text="Directed By  .  "
                 android:paddingBottom="5dp"
-                android:textSize="12dp" />
+                android:textSize="15dp" />
 
             <View
                 android:id="@+id/line"
@@ -78,7 +78,7 @@
                     android:layout_weight="5"
                     android:id="@+id/linear2"
                     android:layout_below="@+id/line"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="horizontal" >
 
 
@@ -89,9 +89,9 @@
                         android:layout_weight="1"
                         android:drawableTop="@drawable/ic_eye_white"
                         android:layout_marginRight="0dp"
-                        android:text="   Watched"
-                        android:layout_gravity="center"
-                        android:textColor="@color/black"
+                        android:text="Watched"
+                        android:gravity="center"
+                        android:textColor="#7F848A"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp" />
 
@@ -100,8 +100,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="      Wishlist"
-                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:text="Wishlist"
+                        android:textColor="#7F848A"
                         android:drawableTop="@drawable/ic_wish_white"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
@@ -112,40 +113,36 @@
                         android:id="@+id/list"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="     Add to List"
+                        android:text="List"
+                        android:textColor="#7F848A"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:drawableTop="@drawable/ic_list"
                         android:layout_marginLeft="10dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp" />
 
+                    <TextView
+                        android:id="@+id/imdbrating"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:drawableTop="@drawable/ic_star"
+                        android:text="   "
+                        android:textColor="#7F848A"
+                        android:textSize="20dp" />
+
                 </LinearLayout>
 
-
-                <TextView
-                android:id="@+id/imdbrating"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/genre"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="9dp"
-                android:drawableLeft="@drawable/ic_star"
-                android:gravity="center"
-                android:text="   "
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-
-
-                <ImageView
+                <!--<ImageView
                 android:layout_width="90dp"
                 android:layout_height="130dp"
                     android:layout_below="@+id/linear2"
                 android:id="@+id/poster"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"/>-->
 
 
             <TextView
@@ -160,7 +157,7 @@
                 android:layout_gravity="center_vertical|right"
                 android:padding="10dp"
                 android:text="Something Something Something Something Something "
-                android:textColor="@color/white"
+                android:textColor="#7F848A"
                 android:textSize="15sp"
                 android:textStyle="normal" />
 
@@ -224,12 +221,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/line3"
-                    android:text="ACTORS"
+                    android:text="Actors"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:textSize="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="#7F848A"
                     android:id="@+id/textViewCast"/>
 
                 <android.support.v7.widget.RecyclerView
@@ -239,6 +236,28 @@
                     android:scrollbars="horizontal"
                     android:layout_marginLeft="7dp"
                     android:layout_below="@+id/textViewCast"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/recycler_cast"
+                    android:text="Recomendations"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="10dp"
+                    android:textColor="#7F848A"
+                    android:id="@+id/recom"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_recom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal"
+                    android:layout_marginLeft="7dp"
+                    android:layout_below="@+id/recom"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
 
@@ -251,4 +270,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

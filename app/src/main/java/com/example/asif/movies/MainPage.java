@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class MainPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        StatusBarUtil.setTransparent(MainPage.this);
         collapsingToolbarLayout = findViewById(R.id.htab_collapse_toolbar);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
@@ -90,58 +93,21 @@ public class MainPage extends AppCompatActivity {
     }
 
     private void setCoverPhoto() {
-        final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Users")
-                .child("Cover Photo") ;
-               // .child(AccountDetails.getCurrentUser().getUsername());
-        databaseUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot users : dataSnapshot.getChildren()){
-                    if(users.getKey().equals(AccountDetails.getCurrentUser().getUsername())) {
-                        String poster = "https://image.tmdb.org/t/p/w500" + users.getValue().toString();
+        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        String cover = sharedpreferences.getString("Cover Photo","");
+        String poster = "https://image.tmdb.org/t/p/original" + cover;
+        Log.d("Error", poster);
 
-                        Glide.with(MainPage.this)
-                                .load(poster)
-                                .apply(new RequestOptions()
-                                        .placeholder(R.drawable.load)
-                                        .centerCrop()
-                                        .dontAnimate()
-                                        .dontTransform())
-                                .into(cover_photo);
-
-                        /*try {
-                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.trailer);
-                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                                @SuppressWarnings("ResourceType")
-                                @Override
-                                public void onGenerated(Palette palette) {
-
-                                    int vibrantColor = palette.getVibrantColor(R.color.colorAccent);
-                                    int vibrantDarkColor = palette.getDarkVibrantColor(R.color.colorAccent);
-                                    collapsingToolbarLayout.setContentScrimColor(vibrantColor);
-                                    collapsingToolbarLayout.setStatusBarScrimColor(vibrantDarkColor);
-                                }
-                            });
-
-                        } catch (Exception e) {
-                            // if Bitmap fetch fails, fallback to primary color
-                            collapsingToolbarLayout.setContentScrimColor(
-                                    ContextCompat.getColor(MainPage.this, R.color.colorAccent)
-                            );
-                            collapsingToolbarLayout.setStatusBarScrimColor(
-                                    ContextCompat.getColor(MainPage.this, R.color.colorAccent)
-                            );
-                        }*/
-
-                        break;
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        Glide.with(MainPage.this)
+                .load(poster)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.load)
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform())
+                .into(cover_photo);
     }
 
     private boolean toolbarClick(MenuItem item) {
@@ -232,5 +198,11 @@ public class MainPage extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setCoverPhoto();
     }
 }

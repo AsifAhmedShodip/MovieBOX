@@ -8,7 +8,7 @@
     <color name="movie_title">#4c4c4c</color>
     <color name="white">#FFF</color>
     <color name="black">#000000</color>
-    <color name="ash">#393e3a</color>
-    <color name="ratingColor">#E5C81E</color>
+    <color name="ash">#181B20</color>
+    <color name="ratingColor">#DEB92C</color>
 
 </resources>

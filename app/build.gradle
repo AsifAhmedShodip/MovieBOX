@@ -18,7 +18,6 @@ android {
         buildTypes.each {
             it.buildConfigField 'String', 'THE_MOVIE_DB_API_TOKEN', MyTheMovieDBApiToken
             it.buildConfigField 'String', 'THE_OMDB_API', MyOmdbApi
-            it.buildConfigField 'String', 'MySessionId', MySessionId
         }
     }
 }
@@ -42,8 +41,12 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.android.support:palette-v7:27.1.0'
+    compile 'com.google.code.gson:gson:2.7'
+
+    compile 'com.jaeger.statusbarutil:library:1.4.0'
 
 }
+
 
 
 

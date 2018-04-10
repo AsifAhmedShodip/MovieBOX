@@ -19,6 +19,7 @@ import com.example.asif.movies.MainPage;
 import com.example.asif.movies.R;
 import com.example.asif.movies.model.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.asif.movies.MainActivity.movieStatic;
@@ -29,13 +30,33 @@ import static com.example.asif.movies.MainActivity.movieStatic;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder>{
 
+    private static final int ITEM = 0;
+    private static final int LOADING = 1;
+
     private Context mContext;
     private List<Movie> movieList;
+
+    private boolean isLoadingAdded = false;
 
     public MoviesAdapter(Context mContext,List<Movie> movieList){
         this.mContext = mContext;
         this.movieList = movieList;
     }
+
+    public MoviesAdapter(Context mContext){
+        this.mContext = mContext;
+        this.movieList = new ArrayList<>();
+    }
+
+    public List<Movie> getMovies() {
+        return movieList;
+    }
+
+    public void setMovies(List<Movie> movieList) {
+        this.movieList = movieList;
+    }
+
+
     @Override
     public MoviesAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext)

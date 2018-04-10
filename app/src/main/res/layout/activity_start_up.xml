@@ -4,18 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/a"
     android:id="@+id/screen"
     tools:context="com.example.asif.movies.StartUpActivity">
 
     <TextView
+        android:id="@+id/MBOX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="241dp"
         android:text="MovieBOX"
-        android:id="@+id/MBOX"
         android:textColor="@color/colorAccent"
         android:textSize="50dp" />
-w
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/MBOX"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:background="#182724"
+        android:paddingBottom="0dp" />
+
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="115dp"
+        android:layout_height="100dp"
+        android:layout_alignTop="@+id/view1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
+        android:background="#182724"
+        android:paddingBottom="0dp" />
 </RelativeLayout>

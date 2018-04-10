@@ -47,7 +47,9 @@ public interface Service {
     Call<AccountDetails> getAccountDetails(@Query("api_key") String apikey,@Query("session_id") String session_id);
 
     @GET("account/{account_id}/watchlist/movies")
-    Call<MoviesResponse> getWatchList(@Query("api_key") String apikey , @Query("session_id") String sessionid);
+    Call<MoviesResponse> getWatchList(@Query("api_key") String apikey ,@Query("language") String language,
+                                      @Query("session_id") String sessionid,
+                                      @Query("sort_by") String sort_by , @Query("page") int page);
 
     @GET("authentication/session/new")
     Call<Session_Id> getSessionID(@Query("api_key") String apikey , @Query("request_token") String token);
@@ -97,4 +99,9 @@ public interface Service {
 
     @GET("movie/{movie_id}/credits")
     Call<CastResponse> getCastDetails(@Path("movie_id") int movie_id ,@Query("api_key") String apikey);
+
+
+    @GET("movie/{movie_id}/recommendations")
+    Call<MoviesResponse> getRecomendations(@Path("movie_id") int movie_id,@Query("api_key") String apikey,
+                                           @Query("language") String language ,@Query("page") int page);
 }

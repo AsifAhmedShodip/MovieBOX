@@ -2,6 +2,7 @@ package com.example.asif.movies.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
@@ -17,7 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.asif.movies.BuildConfig;
@@ -52,6 +55,14 @@ public class WishList extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     public static Movie movieStatic;
     SharedPreferences sharedpreferences;
+    String session_id;
+
+    Boolean isScrolling = false;
+    int currentItems, totalItems, scrollOutItems;
+    ProgressBar progressBar;
+    int totalPages = 10;
+    int page = 0;
+    List<Movie> movies = new ArrayList<>();
     public WishList() {
 
     }
@@ -64,7 +75,10 @@ public class WishList extends Fragment {
         //final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame);
         //frameLayout.setBackgroundColor(color);
         recyclerView =  view.findViewById(R.id.recycler);
+        progressBar = view.findViewById(R.id.progress);
         sharedpreferences = getActivity().getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        session_id = sharedpreferences.getString("Session_id","");
         loadJSON();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.main_content);
@@ -72,15 +86,13 @@ public class WishList extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){
+                page = 0;
+                movies.clear();
                 loadJSON();
                 Toast.makeText(getActivity(), "Refreshed", Toast.LENGTH_SHORT).show();
             }
         });
 
-        return view;
-    }
-
-    private void initViews(List<Movie> movies) {
         adapter = new MoviesAdapter(getContext(), movies);
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -89,50 +101,87 @@ public class WishList extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 8));
         }
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+
+                currentItems = recyclerView.getLayoutManager().getChildCount();
+                totalItems = recyclerView.getLayoutManager().getItemCount();
+                scrollOutItems = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+                if(isScrolling && (currentItems + scrollOutItems == totalItems))
+                {
+                    isScrolling = false;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(page <= totalPages)
+                                loadJSON();
+                        }
+                    }, 0);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
+                {
+                    isScrolling = true;
+                }
+            }
+        });
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         if (swipeContainer.isRefreshing()){
             swipeContainer.setRefreshing(false);
         }
-        //pd.dismiss();
+
+        return view;
     }
     private void loadJSON(){
-       /* pd = new ProgressDialog(getActivity());
-        pd.setMessage("Loading");
-        pd.setCancelable(false);
-        pd.show();*/
+        progressBar.setVisibility(View.VISIBLE);
         try{
             if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
                 Toast.makeText(getActivity(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
                 pd.dismiss();
                 return;
             }
-                Client Client = new Client();
-                Service apiService = Client.getClient().create(Service.class);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                String session_id = sharedpreferences.getString("Session_id","");
-                Call<MoviesResponse> call = apiService.getWatchList(BuildConfig.THE_MOVIE_DB_API_TOKEN, session_id);
-                call.enqueue(new Callback<MoviesResponse>() {
-                    @Override
-                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                        if(!response.body().getResults().equals(null)) {
-                            List<Movie> movies = response.body().getResults();
-                            initViews(movies);
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<MoviesResponse> call, Throwable t) {
+            page++;
+            Client Client = new Client();
+            Service apiService = Client.getClient().create(Service.class);
+            Call<MoviesResponse> call = apiService.getWatchList(BuildConfig.THE_MOVIE_DB_API_TOKEN,"en-US", session_id ,
+                                                    "created_at.desc",page);
+            call.enqueue(new Callback<MoviesResponse>() {
+                @Override
+                public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                        totalPages = response.body().getTotalPages();
+                        for (int j = 0; j < response.body().getResults().size(); j++) {
+                            movies.add(response.body().getResults().get(j));
+                        }
                         if (swipeContainer.isRefreshing()) {
                             swipeContainer.setRefreshing(false);
                         }
-                        //pd.dismiss();
-                        Log.d("Error", t.getMessage());
-                        Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+                        adapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                }
 
+                @Override
+                public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                    if (swipeContainer.isRefreshing()) {
+                        swipeContainer.setRefreshing(false);
                     }
-                });
+                    //pd.dismiss();
+                    Log.d("Error", t.getMessage());
+                    Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }catch (Exception e){
             if (swipeContainer.isRefreshing()){
                 swipeContainer.setRefreshing(false);

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +49,7 @@ import com.example.asif.movies.model.Cast_crew.CastResponse;
 import com.example.asif.movies.model.Genre;
 import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.model.MovieVideo;
+import com.example.asif.movies.model.MoviesResponse;
 import com.example.asif.movies.model.OmdbMovieResponse;
 import com.example.asif.movies.model.WatchListBody;
 import com.example.asif.movies.model.WatchListResponse;
@@ -55,6 +59,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.List;
 
@@ -76,8 +81,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     String movieCount = "0",totalCount = "0";
     CoordinatorLayout screen;
     String session_id;
-    RecyclerView recyclerView_cast;
+    RecyclerView recyclerView_cast ,recyclerView_recom;
     CastAdapter castAdapter ,castAdapter2;
+    MoviesAdapter moviesAdapter;
     private boolean watchlistStatus,watchedMovieStatus,plot = false;
     String directorName;
 
@@ -85,6 +91,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        StatusBarUtil.setTransparent(DetailActivity.this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -110,6 +118,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         list = (TextView) findViewById(R.id.list);
         trailer = findViewById(R.id.trailer);
         recyclerView_cast = findViewById(R.id.recycler_cast);
+        recyclerView_recom = findViewById(R.id.recycler_recom);
 
         progress=new ProgressDialog(this);
         progress.setMessage("Loading ...");
@@ -232,11 +241,38 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 setPoster(response.body().getPosterPath());
                 setImdbRating(response.body().getImdbId());
                 setCast(response.body().getId());
+                setRecomendations(response.body().getId());
                 progress.dismiss();
             }
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
+                progress.dismiss();
+                Log.d("Error", t.getMessage());
+                Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void setRecomendations(Integer id) {
+        Client Client = new Client();
+        Service apiService = Client.getClient().create(Service.class);
+        Call<MoviesResponse> call = apiService.getRecomendations(id,BuildConfig.THE_MOVIE_DB_API_TOKEN,"en-US",1);
+        call.enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                moviesAdapter = new MoviesAdapter(DetailActivity.this, response.body().getMovies());
+                recyclerView_recom.smoothScrollToPosition(0);
+                recyclerView_recom.setLayoutManager(new LinearLayoutManager(DetailActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                recyclerView_recom.setItemAnimator(new DefaultItemAnimator());
+                recyclerView_recom.setAdapter(moviesAdapter);
+                moviesAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progress.dismiss();
                 Log.d("Error", t.getMessage());
                 Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
@@ -292,11 +328,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setBackdrop(String backdropPath) {
-        final String poster = "https://image.tmdb.org/t/p/w500" + backdropPath;
+        final String poster = "https://image.tmdb.org/t/p/original" + backdropPath;
         Glide.with(this)
                 .load(poster)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.load)
+                        .placeholder(R.drawable.loading)
                         .centerCrop()
                         .dontAnimate()
                         .dontTransform())
@@ -386,12 +422,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                         movieCount = users.getValue(String.class);
                         watchedMovieStatus = true;
                         if(!movieCount.equals("0")) {
-                            watched.setText("  " +
-                                    "Watched x" + movieCount);
+                            watched.setText("x" + movieCount);
                             setTextViewDrawableColor(watched, R.color.colorAccent);
                           }
                         else {
-                            watched.setText("     Watched");
+                            watched.setText("Watched");
                             setTextViewDrawableColor(watched, R.color.black);
                         }
                         break;
@@ -450,13 +485,16 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset){
                 if (scrollRange == -1){
                     scrollRange = appBarLayout.getTotalScrollRange();
+                    poster.setVisibility(View.VISIBLE);
                 }
                 if (scrollRange + verticalOffset == 0){
                     collapsingToolbarLayout.setTitle(movie.getTitle());
                     isShow = true;
+                    poster.setVisibility(View.GONE);
                 }else if (isShow){
                     collapsingToolbarLayout.setTitle(movie.getTitle());
                     isShow = false;
+                    poster.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -578,5 +616,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

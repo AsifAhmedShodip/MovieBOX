@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
@@ -23,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +39,7 @@ public class LogIn extends AppCompatActivity {
     String session_id = "";
     private ListResponse listResponse;
     public String string;
+    ProgressBar progressBar;
 
     SharedPreferences sharedpreferences;
     @Override
@@ -43,14 +48,14 @@ public class LogIn extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         button = findViewById(R.id.signinbutton);
         register = findViewById(R.id.signUpbutton);
+        progressBar = findViewById(R.id.progress);
 
-        //config();
-        //accountDetails();
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 String s_id = sharedpreferences.getString("Session_id","");
                 if(!s_id.equals("")){
                     session_id = s_id;
@@ -58,7 +63,6 @@ public class LogIn extends AppCompatActivity {
                 }
                 else{
                     checkToken();
-                    //config();
                 }
             }
         });
@@ -110,42 +114,6 @@ public class LogIn extends AppCompatActivity {
         }
     }
 
-  /*  private void checkWatchList() {
-        boolean watchedMovieList = false;
-        for(int i=0;i<listResponse.getList().size();i++)
-        {
-            if(listResponse.getList().get(i).getName().equals("Watched Movies"))
-            {
-                watchedMovieList = true;
-            }
-        }
-        if(!watchedMovieList)
-        {
-            CreateList createList = new CreateList();
-            createList.setName("Watched Movies");
-            createList.setDescription("Watched Movies");
-            createList.setLanguage("en");
-            Client Client = new Client();
-            Service apiService = Client.getClient().create(Service.class);
-            Call<CreateListResponse> call = apiService.creatList(BuildConfig.THE_MOVIE_DB_API_TOKEN,session_id,createList);
-            call.enqueue(new Callback<CreateListResponse>() {
-                @Override
-                public void onResponse(Call<CreateListResponse> call, Response<CreateListResponse> response) {
-                    if(response.body().getStatusCode() == 1)
-                    {
-                        Log.d("Error", "DONE CREATING");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<CreateListResponse> call, Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    Toast.makeText(LogIn.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }*/
-
     public void accountDetails(String s_id) {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
@@ -157,14 +125,44 @@ public class LogIn extends AppCompatActivity {
                  //if(response.body().getUsername()!=null)
                     //firebaseDataLoadUp(response.body().getUsername());
 
-                Intent i = new Intent (getApplicationContext(),MainPage.class);
-                startActivity(i);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(response.body());
+                editor.putString("Account Details",json);
+                editor.commit();
+                setCoverPhoto(response.body().getUsername());
             }
 
             @Override
             public void onFailure(Call<AccountDetails> call, Throwable t) {
                 Log.d("Error", t.getMessage());
                 Toast.makeText(LogIn.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setCoverPhoto(final String username) {
+        final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Users")
+                .child("Cover Photo") ;
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot users : dataSnapshot.getChildren()){
+                    if(users.getKey().equals(username)) {
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("Cover Photo", users.getValue(String.class));
+                        editor.commit();
+                        Log.d("Error", users.getValue().toString());
+                        Intent i = new Intent (getApplicationContext(),MainPage.class);
+                        startActivity(i);
+                        progressBar.setVisibility(View.GONE);
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
@@ -200,6 +198,7 @@ public class LogIn extends AppCompatActivity {
             call.enqueue(new Callback<Request_Token>() {
                 @Override
                 public void onResponse(Call<Request_Token> call, Response<Request_Token> response) {
+                    progressBar.setVisibility(View.GONE);
                     Request_Token token = (Request_Token) response.body();
                     rToken = token.getRequestToken();
                     SharedPreferences.Editor editor = sharedpreferences.edit();

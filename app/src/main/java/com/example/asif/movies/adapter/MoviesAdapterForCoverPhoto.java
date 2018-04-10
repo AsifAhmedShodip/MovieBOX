@@ -3,6 +3,7 @@ package com.example.asif.movies.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.example.asif.movies.R;
 import com.example.asif.movies.model.image.Backdrop;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class MoviesAdapterForCoverPhoto extends RecyclerView.Adapter<MoviesAdapt
     @Override
     public void onBindViewHolder(final MoviesAdapterForCoverPhoto.MyViewHolder viewHolder, final int i) {
 
-        String poster = "https://image.tmdb.org/t/p/w500" + backdropList.get(i).getFilePath();
+        String poster = "https://image.tmdb.org/t/p/original" + backdropList.get(i).getFilePath();
 
         Glide.with(mContext)
                 .load(poster)
@@ -75,6 +77,10 @@ public class MoviesAdapterForCoverPhoto extends RecyclerView.Adapter<MoviesAdapt
                                             .child(AccountDetails.getCurrentUser().getUsername());
 
                                     databaseUsers.setValue(clickedDataItem.getFilePath());
+                                    SharedPreferences sharedpreferences = mContext.getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString("Cover Photo",clickedDataItem.getFilePath());
+                                    editor.commit();
                                     arg0.dismiss();
 
                                 }

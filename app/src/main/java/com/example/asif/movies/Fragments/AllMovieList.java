@@ -3,6 +3,7 @@ package com.example.asif.movies.Fragments;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.asif.movies.BuildConfig;
@@ -47,9 +49,9 @@ public class AllMovieList extends Fragment{
     List<Movie> movies = new ArrayList<>();
     Boolean isScrolling = false;
     int currentItems, totalItems, scrollOutItems;
+    ProgressBar progressBar;
+    int totalPages = 10;
 
-    private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
     public AllMovieList() {
     }
 
@@ -61,6 +63,7 @@ public class AllMovieList extends Fragment{
         //final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame);
         //frameLayout.setBackgroundColor(color);
         recyclerView =  view.findViewById(R.id.recycler);
+        progressBar = view.findViewById(R.id.progress);
         loadJSON();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.main_content);
@@ -68,6 +71,8 @@ public class AllMovieList extends Fragment{
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){
+                page = 0;
+                movies.clear();
                 loadJSON();
                 Toast.makeText(getActivity(), "Refreshed", Toast.LENGTH_SHORT).show();
             }
@@ -86,25 +91,6 @@ public class AllMovieList extends Fragment{
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                /*Log.d("Error  ", "dy "+String.valueOf(dy));
-                if(dy > 0) //check for scroll down
-                {
-                    visibleItemCount = recyclerView.getLayoutManager().getChildCount();
-                    totalItemCount = recyclerView.getLayoutManager().getItemCount();
-                    pastVisiblesItems =((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            //loading = false;
-                            Log.d("Error", "Last Item Wow !"+visibleItemCount+" "+totalItemCount
-                                    +" "+pastVisiblesItems);
-                            loadJSON();
-                        }
-                    }
-                }*/
-
 
                 currentItems = recyclerView.getLayoutManager().getChildCount();
                 totalItems = recyclerView.getLayoutManager().getItemCount();
@@ -113,7 +99,13 @@ public class AllMovieList extends Fragment{
                 if(isScrolling && (currentItems + scrollOutItems == totalItems))
                 {
                     isScrolling = false;
-                    loadJSON();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(page <= totalPages)
+                                loadJSON();
+                        }
+                    }, 0);
                 }
             }
 
@@ -139,11 +131,7 @@ public class AllMovieList extends Fragment{
     }
 
     private void loadJSON(){
-        /*
-        pd = new ProgressDialog(getActivity());
-        pd.setMessage("Loading");
-        pd.setCancelable(false);
-        pd.show();*/
+        progressBar.setVisibility(View.VISIBLE);
         try{
             if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
                 Toast.makeText(getActivity(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
@@ -158,15 +146,15 @@ public class AllMovieList extends Fragment{
                 call.enqueue(new Callback<MoviesResponse>() {
                     @Override
                     public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                        //movies = response.body().getResults();
+                        totalPages = response.body().getTotalPages();
                         for (int j = 0; j < response.body().getResults().size(); j++) {
                             movies.add(response.body().getResults().get(j));
                         }
                         if (swipeContainer.isRefreshing()) {
                             swipeContainer.setRefreshing(false);
                         }
-                        adapter = new MoviesAdapter(getActivity(), movies);
-                        recyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -184,7 +172,6 @@ public class AllMovieList extends Fragment{
             if (swipeContainer.isRefreshing()){
                 swipeContainer.setRefreshing(false);
             }
-            //pd.dismiss();
             Log.d("Error", e.getMessage());
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
         }
