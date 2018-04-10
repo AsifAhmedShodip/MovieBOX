@@ -1,9 +1,12 @@
 package com.example.asif.movies.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,6 +21,7 @@ import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.asif.movies.BottomNavigationBehavior;
 import com.example.asif.movies.BuildConfig;
 import com.example.asif.movies.MainActivity;
 import com.example.asif.movies.R;
@@ -51,8 +55,14 @@ public class AllMovieList extends Fragment{
     int currentItems, totalItems, scrollOutItems;
     ProgressBar progressBar;
     int totalPages = 10;
+    BottomNavigationView bottomNavigationView;
 
     public AllMovieList() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public AllMovieList(BottomNavigationView bottomNavigationView){
+        this.bottomNavigationView  = bottomNavigationView;
     }
 
     @Override
@@ -126,6 +136,9 @@ public class AllMovieList extends Fragment{
         if (swipeContainer.isRefreshing()){
             swipeContainer.setRefreshing(false);
         }
+
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationBehavior());
 
         return view;
     }

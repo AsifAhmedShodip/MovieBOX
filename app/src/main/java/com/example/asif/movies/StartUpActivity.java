@@ -63,7 +63,7 @@ public class StartUpActivity extends AppCompatActivity {
             AccountDetails obj = gson.fromJson(json, AccountDetails.class);
             AccountDetails.setCurrentUser(obj);
             firebaseDataLoadUp(obj.getUsername());
-            Intent i = new Intent (getApplicationContext(),MainPage.class);
+            Intent i = new Intent (getApplicationContext(),Bottom_Navigation.class);
             startActivity(i);
         }
         else{
@@ -104,7 +104,7 @@ public class StartUpActivity extends AppCompatActivity {
             String json = sharedpreferences.getString("Account Details", "");
             AccountDetails obj = gson.fromJson(json, AccountDetails.class);
             AccountDetails.setCurrentUser(obj);
-            Intent i = new Intent (getApplicationContext(),MainPage.class);
+            Intent i = new Intent (getApplicationContext(),Bottom_Navigation.class);
             startActivity(i);
         }
         else{

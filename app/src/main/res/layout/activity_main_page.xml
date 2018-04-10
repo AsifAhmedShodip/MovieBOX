@@ -49,15 +49,6 @@
                 android:background="@android:color/black"
                 android:fitsSystemWindows="true"/>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/htab_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_gravity="top"
-                android:layout_marginBottom="48dp"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/htab_tabs"
                 android:layout_width="match_parent"
@@ -66,6 +57,16 @@
                 app:tabIndicatorColor="@android:color/white"
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="@color/white"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/htab_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_gravity="top"
+                android:layout_marginBottom="48dp"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

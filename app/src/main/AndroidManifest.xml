@@ -27,10 +27,10 @@
             android:label="MovieBOX"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".SearchActivity" />
-        <activity
+        <!--<activity
             android:name=".MainPage"
             android:label="@string/title_activity_main_page"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity android:name=".WebView_Link.BrowserWebview" />
         <activity android:name=".WebView_Link.SignUpWebview" />
         <activity
@@ -49,7 +49,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Bottom_Navigation"></activity>
+        <activity android:name=".Bottom_Navigation"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
