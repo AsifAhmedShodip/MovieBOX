@@ -1,8 +1,8 @@
 package com.example.asif.movies.api;
 
 import com.example.asif.movies.model.Account.AccountDetails;
-import com.example.asif.movies.authentication.Request_Token;
-import com.example.asif.movies.authentication.Session_Id;
+import com.example.asif.movies.model.authentication.Request_Token;
+import com.example.asif.movies.model.authentication.Session_Id;
 import com.example.asif.movies.model.AccountStates;
 import com.example.asif.movies.model.Cast_crew.CastResponse;
 import com.example.asif.movies.model.CheckItemStatus;

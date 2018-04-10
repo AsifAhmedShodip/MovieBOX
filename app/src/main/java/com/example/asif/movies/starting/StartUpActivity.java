@@ -1,4 +1,4 @@
-package com.example.asif.movies;
+package com.example.asif.movies.starting;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,19 +6,14 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.asif.movies.api.Client;
-import com.example.asif.movies.api.Service;
+import com.example.asif.movies.Bottom_Navigation;
+import com.example.asif.movies.R;
 import com.example.asif.movies.model.Account.AccountDetails;
-import com.example.asif.movies.model.AccountStates;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,12 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.jaeger.library.StatusBarUtil;
-
-import org.w3c.dom.Text;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class StartUpActivity extends AppCompatActivity {
     TextView appName;

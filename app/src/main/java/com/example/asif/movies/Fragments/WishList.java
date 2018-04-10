@@ -3,13 +3,11 @@ package com.example.asif.movies.Fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,21 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.asif.movies.BuildConfig;
-import com.example.asif.movies.LogIn;
-import com.example.asif.movies.MainActivity;
 import com.example.asif.movies.R;
 import com.example.asif.movies.adapter.MoviesAdapter;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
 import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.model.MoviesResponse;
-import com.example.asif.movies.model.WatchList;
-import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +34,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.asif.movies.Bottom_Navigation.navigation;
 
 /**
  * Created by asif on 06-Apr-18.
@@ -106,7 +101,12 @@ public class WishList extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
+                if (dy > 0 && navigation.isShown()) {
+                    navigation.setVisibility(View.GONE);
+                } else if (dy < 0 ) {
+                    navigation.setVisibility(View.VISIBLE);
 
+                }
                 currentItems = recyclerView.getLayoutManager().getChildCount();
                 totalItems = recyclerView.getLayoutManager().getItemCount();
                 scrollOutItems = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();

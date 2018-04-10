@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/a"
     android:id="@+id/screen"
-    tools:context="com.example.asif.movies.StartUpActivity">
+    tools:context=".starting.StartUpActivity">
 
     <TextView
         android:id="@+id/MBOX"

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.asif.movies.DetailActivityForCoverPhoto;
+import com.example.asif.movies.Profile.DetailActivityForCoverPhoto;
 import com.example.asif.movies.R;
 import com.example.asif.movies.model.Movie;
 

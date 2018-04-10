@@ -1,4 +1,4 @@
-package com.example.asif.movies;
+package com.example.asif.movies.starting;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,13 +13,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.example.asif.movies.BuildConfig;
+import com.example.asif.movies.MainPage;
+import com.example.asif.movies.R;
 import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
-import com.example.asif.movies.authentication.Request_Token;
-import com.example.asif.movies.authentication.Session_Id;
+import com.example.asif.movies.model.authentication.Request_Token;
+import com.example.asif.movies.model.authentication.Session_Id;
 import com.example.asif.movies.model.ListResponse;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

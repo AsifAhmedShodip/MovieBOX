@@ -1,6 +1,5 @@
 package com.example.asif.movies.model;
 
-import com.example.asif.movies.Rated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

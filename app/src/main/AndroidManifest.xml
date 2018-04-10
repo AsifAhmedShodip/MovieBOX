@@ -16,14 +16,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
         <activity
             android:name=".DetailActivity"
             android:label="Movies"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".LogIn"
+            android:name=".starting.LogIn"
             android:label="MovieBOX"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".SearchActivity" />
@@ -38,10 +37,10 @@
             android:label="@string/title_activity_edit_cover_photo"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".DetailActivityForCoverPhoto"
+            android:name=".Profile.DetailActivityForCoverPhoto"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StartUpActivity"
+            android:name=".starting.StartUpActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

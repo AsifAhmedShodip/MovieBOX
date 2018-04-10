@@ -1,27 +1,20 @@
 package com.example.asif.movies;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,28 +29,17 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.asif.movies.model.Account.AccountDetails;
+import com.example.asif.movies.starting.LogIn;
 import com.example.asif.movies.Fragments.AllMovieList;
 import com.example.asif.movies.Fragments.WishList;
 import com.example.asif.movies.Profile.EditCoverPhoto;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainPage extends Fragment {
 
-    BottomNavigationView bottomNavigationView;
     public MainPage(){}
-    @SuppressLint("ValidFragment")
-    public MainPage(BottomNavigationView bottomNavigationView){
-        this.bottomNavigationView = bottomNavigationView;
-    }
 
     private ViewPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -66,6 +48,7 @@ public class MainPage extends Fragment {
     private ImageView profile_pic , cover_photo;
     SharedPreferences sharedpreferences;
     AppBarLayout appBarLayout;
+    Toolbar toolbar;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RestrictedApi")
@@ -75,11 +58,10 @@ public class MainPage extends Fragment {
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme_NoActionBar);
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         View view = localInflater.inflate(R.layout.activity_main_page, null, false);
-        StatusBarUtil.setTransparent(getActivity());
-        (getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         collapsingToolbarLayout = view.findViewById(R.id.htab_collapse_toolbar);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.htab_toolbar);
+        toolbar = (Toolbar) view.findViewById(R.id.htab_toolbar);
         appBarLayout = view.findViewById(R.id.htab_appbar);
         tabLayout = view.findViewById(R.id.htab_tabs);
 
@@ -112,8 +94,6 @@ public class MainPage extends Fragment {
                 .apply(RequestOptions.circleCropTransform())
                 .into(profile_pic);*/
 
-        Drawable drawable = ContextCompat.getDrawable(getActivity(),R.drawable.ic_settings20);
-        toolbar.setOverflowIcon(drawable);
 
         setCoverPhoto();
         return view;
@@ -167,7 +147,7 @@ public class MainPage extends Fragment {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter((getActivity()).getSupportFragmentManager());
         adapter.addFrag(new WishList(),"Wishlist");
-        adapter.addFrag(new AllMovieList(bottomNavigationView),"Films");
+        adapter.addFrag(new AllMovieList(),"Films");
         adapter.addFrag(new WishList(),"Lists");
         viewPager.setAdapter(adapter);
     }
@@ -191,7 +171,7 @@ public class MainPage extends Fragment {
     }
 
 
-    private static class ViewPagerAdapter extends FragmentPagerAdapter {
+    private static class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String>  mFragmentTitleList  = new ArrayList<>();
 
@@ -229,6 +209,5 @@ public class MainPage extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setCoverPhoto();
     }
 }

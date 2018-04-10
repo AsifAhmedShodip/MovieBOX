@@ -4,13 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
+    android:fitsSystemWindows="true"
+    app:statusBarBackground="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_height="match_parent"
+        app:statusBarBackground="@android:color/transparent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.BottomNavigationView
@@ -18,11 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:fitsSystemWindows="true"
         android:background="?android:attr/windowBackground"
-        app:itemBackground="@color/colorAccent"
+        app:itemBackground="@color/colorPrimary"
         android:foreground="?attr/selectableItemBackground"
         app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
+        app:itemTextColor="@android:color/black"
         app:menu="@menu/navigation" />
 
 </android.support.design.widget.CoordinatorLayout>
