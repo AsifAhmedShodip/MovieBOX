@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.example.asif.movies.Bottom_Navigation;
 import com.example.asif.movies.R;
 import com.example.asif.movies.model.Account.AccountDetails;
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +48,12 @@ public class StartUpActivity extends AppCompatActivity {
 
         Animation animRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_up);
         screen.startAnimation(animRightIn);
+
+        AppUpdater appUpdater = new AppUpdater(this);
+        appUpdater.setUpdateFrom(UpdateFrom.GITHUB)
+                    .setGitHubUserAndRepo("AsifAhmedShodip","MovieBOX")
+                .setDisplay(Display.DIALOG)
+                .start();
 
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
