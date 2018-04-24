@@ -13,9 +13,9 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.asif.movies.Fragments.AllMovieList;
+import com.example.asif.movies.BrowseMovies.BrowseMovies;
+import com.example.asif.movies.BrowseMovies.PopularMovies;
 import com.example.asif.movies.Fragments.WishList;
-import com.jaeger.library.StatusBarUtil;
 
 public class Bottom_Navigation extends AppCompatActivity {
 
@@ -35,13 +35,13 @@ public class Bottom_Navigation extends AppCompatActivity {
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_Films);
+        navigation.setSelectedItemId(R.id.navigation_browse);
 
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
         //toolbar.setTitle("Shop");
-        loadFragment(new MainPage());
+        loadFragment(new BrowseMovies());
     }
 
     private void loadFragment(Fragment fragment) {
@@ -59,20 +59,26 @@ public class Bottom_Navigation extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
             switch (item.getItemId()) {
-                case R.id.navigation_Films:
+                case R.id.navigation_browse:
                     //toolbar.setTitle("Shop");
-                    loadFragment(new MainPage());
+                    loadFragment(new BrowseMovies());
                     return true;
-                case R.id.navigation_activity:
+                case R.id.navigation_list:
                     //toolbar.setTitle("My Gifts");
                     loadFragment(new WishList());
                     return true;
                 case R.id.navigation_profile:
                     //toolbar.setTitle("Cart");
-                    loadFragment(new AllMovieList());
+                    loadFragment(new PopularMovies());
                     return true;
             }
             return false;
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        finish();
+    }
 }

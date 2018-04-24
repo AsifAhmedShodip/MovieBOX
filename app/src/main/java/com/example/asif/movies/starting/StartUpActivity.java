@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -22,11 +23,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.jaeger.library.StatusBarUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StartUpActivity extends AppCompatActivity {
     TextView appName;
     SharedPreferences sharedpreferences;
     String session_id;
     RelativeLayout screen;
+    public static List<String > seenMovies = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,10 @@ public class StartUpActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot users : dataSnapshot.getChildren()){
-                    //do something
+                    if(!users.getValue().toString().equals("0")) {
+                        seenMovies.add(users.getKey().toString());
+                        Log.d("Array" ,users.getKey());
+                    }
                 }
             }
             @Override

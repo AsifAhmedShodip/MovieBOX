@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_something"
-        android:icon="@drawable/ic_movies"
-        android:title="Something" />
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_settings20"
+        android:title="Settings" />
 
     <item
         android:id="@+id/navigation_profile"
@@ -12,13 +12,13 @@
         android:title="Profile" />
 
     <item
-        android:id="@+id/navigation_activity"
-        android:icon="@drawable/ic_running"
-        android:title="Activity" />
+        android:id="@+id/navigation_list"
+        android:icon="@drawable/ic_view_list"
+        android:title="Lists" />
 
     <item
-        android:id="@+id/navigation_Films"
-        android:icon="@drawable/ic_movies"
-        android:title="Films" />
+        android:id="@+id/navigation_browse"
+        android:icon="@drawable/ic_running"
+        android:title="Browse" />
 
 </menu>

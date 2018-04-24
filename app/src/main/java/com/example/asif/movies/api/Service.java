@@ -32,10 +32,19 @@ import retrofit2.http.Query;
 public interface Service {
     @GET("movie/popular")
     Call<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language,
-                                          @Query("page") int page);
+                                          @Query("page") int page , @Query("region") String region);
 
     @GET("movie/top_rated")
-    Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey);
+    Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language,
+                                           @Query("page") int page,@Query("region") String region) ;
+
+    @GET("movie/now_playing")
+    Call<MoviesResponse> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language,
+                                           @Query("page") int page,@Query("region") String region) ;
+
+    @GET("movie/now_playing")
+    Call<MoviesResponse> getUpcomingMovies(@Query("api_key") String apiKey, @Query("language") String language,
+                                             @Query("page") int page,@Query("region") String region) ;
 
     @GET("authentication/token/new")
     Call<Request_Token> getRequestToken(@Query("api_key") String apikey);
@@ -88,6 +97,9 @@ public interface Service {
     //OMDB
     @GET(".")
     Call<OmdbMovieResponse> getImdbRating(@Query("apikey") String apikey , @Query("i") String query);
+
+    @GET(".")
+    Call<OmdbMovieResponse> getImdbRatingbyName(@Query("apikey") String apikey , @Query("t") String query);
 
     @GET("movie/{movie_id}/videos")
     Call<MovieVideoResponse> getMovieVideoResponse(@Path("movie_id") int movie_id, @Query("api_key") String apikey);

@@ -9,6 +9,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 
@@ -27,7 +28,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
+import com.example.asif.movies.BrowseMovies.BrowseMovies;
+import com.example.asif.movies.Dialouge.DialogMenu;
 import com.example.asif.movies.Profile.DetailActivityForCoverPhoto;
 import com.example.asif.movies.WebView_Link.SignUpWebview;
 import com.example.asif.movies.adapter.CastAdapter;
@@ -46,6 +53,7 @@ import com.example.asif.movies.model.OmdbMovieResponse;
 import com.example.asif.movies.model.WatchListBody;
 import com.example.asif.movies.model.WatchListResponse;
 import com.example.asif.movies.model.MovieVideoResponse;
+import com.example.asif.movies.starting.StartUpActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,7 +66,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import static com.example.asif.movies.MainActivity.movieStatic;
+import static com.example.asif.movies.BrowseMovies.BrowseMovies.movieStatic;
 
 /**
  * Created by asif on 30-Mar-18.
@@ -117,7 +125,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
         progress.setProgress(0);
-        progress.show();
+        //progress.show();
 
         setTextViewDrawableColor(wish, R.color.black);
         setTextViewDrawableColor(watched, R.color.black);
@@ -318,6 +326,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                         .dontAnimate()
                         .dontTransform())
                 .into(poster);
+
+        /*supportPostponeEnterTransition();
+
+        Glide.with(this)
+                .load(path)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.load)
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform())
+                .into(poster);*/
     }
 
     private void setBackdrop(String backdropPath) {
@@ -520,6 +539,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 Intent intent = new Intent(this,SignUpWebview.class); // we are using SignUpWebview Class becuase BrowserWebview is complex
                 intent.putExtra("url",url+directorName);
                 startActivity(intent);
+                break;
             }
         }
     }
@@ -547,6 +567,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     time[0] = Integer.parseInt(totalCount) + movieDetails.getRuntime();
                     databaseUsers.child(String.valueOf(movie.getId())).setValue(temp[0]);
                     databaseUsers2.setValue(String.valueOf(time[0]));
+                    if(!StartUpActivity.seenMovies.contains(movie.getId().toString()))
+                            StartUpActivity.seenMovies.add(movie.getId().toString());
                 }
 
                 @Override
@@ -556,6 +578,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     time[0] = Integer.parseInt(totalCount) - movieDetails.getRuntime();
                     databaseUsers.child(String.valueOf(movie.getId())).setValue(temp[0]);
                     databaseUsers2.setValue(String.valueOf(time[0]));
+                    if(!String.valueOf(time[0]).equals("0")) {//not working
+                        StartUpActivity.seenMovies.remove(movie.getId().toString());
+                    }
                 }
             });
         }
@@ -566,6 +591,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             time[0] = Integer.parseInt(totalCount) + movieDetails.getRuntime();
             databaseUsers.child(String.valueOf(movie.getId())).setValue(temp[0]);
             databaseUsers2.setValue(String.valueOf(time[0]));
+            if(!StartUpActivity.seenMovies.contains(movie.getId().toString()))
+                StartUpActivity.seenMovies.add(movie.getId().toString());
         }
     }
 

@@ -17,8 +17,7 @@ import com.example.asif.movies.model.Movie;
 
 import java.util.List;
 
-import static com.example.asif.movies.MainActivity.movieStatic;
-
+import static com.example.asif.movies.BrowseMovies.BrowseMovies.movieStatic;
 /**
  * Created by asif on 07-Apr-18.
  */

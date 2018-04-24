@@ -24,8 +24,6 @@ import com.example.asif.movies.model.Movie;
 
 import java.util.List;
 
-import static com.example.asif.movies.MainActivity.movieStatic;
-
 /**
  * Created by asif on 08-Apr-18.
  */

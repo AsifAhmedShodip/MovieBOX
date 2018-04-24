@@ -90,6 +90,15 @@ public class Movie {
     private Integer voteCount;
 
     static List<Movie> movieList;
+    static Movie currentMovieInLongPressed;
+
+    public static Movie getCurrentMovieInLongPressed() {
+        return currentMovieInLongPressed;
+    }
+
+    public static void setCurrentMovieInLongPressed(Movie currentMovieInLongPressed) {
+        Movie.currentMovieInLongPressed = currentMovieInLongPressed;
+    }
 
     public static List<Movie> getMovieList() {
         return movieList;

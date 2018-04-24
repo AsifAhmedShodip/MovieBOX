@@ -13,8 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.asif.movies.Bottom_Navigation;
+import com.example.asif.movies.BrowseMovies.BrowseMovies;
 import com.example.asif.movies.BuildConfig;
-import com.example.asif.movies.MainPage;
 import com.example.asif.movies.R;
 import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.api.Client;
@@ -155,7 +156,8 @@ public class LogIn extends AppCompatActivity {
                         editor.putString("Cover Photo", users.getValue(String.class));
                         editor.commit();
                         Log.d("Error", users.getValue().toString());
-                        Intent i = new Intent (getApplicationContext(),MainPage.class);
+                        firebaseDataLoadUp(username);
+                        Intent i = new Intent (getApplicationContext(),Bottom_Navigation.class);
                         startActivity(i);
                         progressBar.setVisibility(View.GONE);
                         break;
@@ -176,7 +178,10 @@ public class LogIn extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot users : dataSnapshot.getChildren()){
-                    //do something
+                    if(!users.getValue().toString().equals("0")) {
+                        StartUpActivity.seenMovies.add(users.getKey().toString());
+                        Log.d("Array" ,users.getKey());
+                    }
                 }
             }
             @Override

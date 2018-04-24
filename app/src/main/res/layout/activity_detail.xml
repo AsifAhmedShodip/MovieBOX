@@ -84,6 +84,7 @@
         android:layout_width="90dp"
         android:layout_height="130dp"
         android:id="@+id/poster"
+        android:transitionName="poster"
         android:layout_marginRight="10dp"
         android:scaleType="fitXY"
         app:layout_anchor="@id/appbar"

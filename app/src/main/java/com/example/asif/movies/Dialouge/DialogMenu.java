@@ -1,4 +1,4 @@
-package com.example.asif.movies;
+package com.example.asif.movies.Dialouge;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.example.asif.movies.R;
 
 /**
  * Created by asif on 31-Mar-18.
@@ -34,7 +36,6 @@ public class DialogMenu implements View.OnClickListener {
         notWatched = (TextView) dialog.findViewById(R.id.notWatched);
         reWatched.setOnClickListener(this);
         notWatched.setOnClickListener(this);
-
     }
 
     public void setListener(OnDialogMenuListener listener) {

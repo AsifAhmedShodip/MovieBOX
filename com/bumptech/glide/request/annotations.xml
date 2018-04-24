@@ -1,0 +1,5 @@
+<root>
+    <item name='com.bumptech.glide.request.RequestListener'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

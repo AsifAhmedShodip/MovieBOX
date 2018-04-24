@@ -1,4 +1,4 @@
-package com.example.asif.movies;
+package com.example.asif.movies.BrowseMovies;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -29,21 +29,24 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.asif.movies.R;
+import com.example.asif.movies.SearchActivity;
+import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.starting.LogIn;
-import com.example.asif.movies.Fragments.AllMovieList;
 import com.example.asif.movies.Fragments.WishList;
 import com.example.asif.movies.Profile.EditCoverPhoto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainPage extends Fragment {
+public class BrowseMovies extends Fragment {
 
-    public MainPage(){}
+    public BrowseMovies(){}
 
     private ViewPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+    public static Movie movieStatic;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView profile_pic , cover_photo;
     SharedPreferences sharedpreferences;
@@ -74,9 +77,9 @@ public class MainPage extends Fragment {
         mViewPager = (ViewPager) view.findViewById(R.id.htab_viewpager);
         setupViewPager(mViewPager);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_wish_color);
+        /*tabLayout.getTabAt(0).setIcon(R.drawable.ic_wish_color);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_movies);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_action_list2);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_action_list2);*/
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -107,7 +110,7 @@ public class MainPage extends Fragment {
         String poster = "https://image.tmdb.org/t/p/original" + cover;
         Log.d("Error", poster);
 
-        Glide.with(MainPage.this)
+        Glide.with(BrowseMovies.this)
                 .load(poster)
                 .apply(new RequestOptions()
                         .placeholder(R.drawable.load)
@@ -146,9 +149,10 @@ public class MainPage extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter((getActivity()).getSupportFragmentManager());
-        adapter.addFrag(new WishList(),"Wishlist");
-        adapter.addFrag(new AllMovieList(),"Films");
-        adapter.addFrag(new WishList(),"Lists");
+        adapter.addFrag(new TopRated(),"Top Rated");
+        adapter.addFrag(new PopularMovies(),"Popular");
+        adapter.addFrag(new NowPlayingMovies(),"Now Playing");
+        adapter.addFrag(new Upcoming(),"Up Coming");
         viewPager.setAdapter(adapter);
     }
 

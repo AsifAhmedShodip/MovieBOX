@@ -1,4 +1,4 @@
-package com.example.asif.movies.Fragments;
+package com.example.asif.movies.BrowseMovies;
 
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
@@ -36,14 +36,13 @@ import retrofit2.Response;
 import static com.example.asif.movies.Bottom_Navigation.navigation;
 
 /**
- * Created by asif on 06-Apr-18.
+ * Created by asif on 12-Apr-18.
  */
 
-public class AllMovieList extends Fragment{
+public class TopRated extends Fragment{
+
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
-    private RecyclerView.Adapter rAdapter;
-    private List<Movie> movieList;
     ProgressDialog pd;
     private SwipeRefreshLayout swipeContainer;
     int page = 0;
@@ -53,16 +52,12 @@ public class AllMovieList extends Fragment{
     ProgressBar progressBar;
     int totalPages = 10;
 
-    public AllMovieList() {
-    }
+    public TopRated(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
-
-        //final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame);
-        //frameLayout.setBackgroundColor(color);
         recyclerView =  view.findViewById(R.id.recycler);
         progressBar = view.findViewById(R.id.progress);
         loadJSON();
@@ -146,35 +141,35 @@ public class AllMovieList extends Fragment{
                 return;
             }
             page++;
-                Client Client = new Client();
-                Service apiService = Client.getClient().create(Service.class);
-                Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN,
-                        "en", page);
-                call.enqueue(new Callback<MoviesResponse>() {
-                    @Override
-                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                        totalPages = response.body().getTotalPages();
-                        for (int j = 0; j < response.body().getResults().size(); j++) {
-                            movies.add(response.body().getResults().get(j));
-                        }
-                        if (swipeContainer.isRefreshing()) {
-                            swipeContainer.setRefreshing(false);
-                        }
-                        adapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
+            Client Client = new Client();
+            Service apiService = Client.getClient().create(Service.class);
+            Call<MoviesResponse> call = apiService.getTopRatedMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN,
+                    "hi", page,"US");
+            call.enqueue(new Callback<MoviesResponse>() {
+                @Override
+                public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                    totalPages = response.body().getTotalPages();
+                    for (int j = 0; j < response.body().getResults().size(); j++) {
+                        movies.add(response.body().getResults().get(j));
                     }
-
-                    @Override
-                    public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                        if (swipeContainer.isRefreshing()) {
-                            swipeContainer.setRefreshing(false);
-                        }
-                        //pd.dismiss();
-                        Log.d("Error", t.getMessage());
-                        Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
-
+                    if (swipeContainer.isRefreshing()) {
+                        swipeContainer.setRefreshing(false);
                     }
-                });
+                    adapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                    if (swipeContainer.isRefreshing()) {
+                        swipeContainer.setRefreshing(false);
+                    }
+                    //pd.dismiss();
+                    Log.d("Error", t.getMessage());
+                    Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }catch (Exception e){
             if (swipeContainer.isRefreshing()){
                 swipeContainer.setRefreshing(false);
@@ -182,5 +177,10 @@ public class AllMovieList extends Fragment{
             Log.d("Error", e.getMessage());
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }

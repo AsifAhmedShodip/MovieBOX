@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by asif on 01-Apr-18.
  */
 
-class Rating {
+public class Rating {
 
     @SerializedName("Source")
     @Expose
