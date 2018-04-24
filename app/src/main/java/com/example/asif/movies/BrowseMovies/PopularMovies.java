@@ -102,13 +102,15 @@ public class PopularMovies extends Fragment{
                 if(isScrolling && (currentItems + scrollOutItems == totalItems))
                 {
                     isScrolling = false;
+                    progressBar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            progressBar.setVisibility(View.GONE);
                             if(page <= totalPages)
                                 loadJSON();
                         }
-                    }, 0);
+                    }, 1000);
                 }
             }
 

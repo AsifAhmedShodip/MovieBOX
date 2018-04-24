@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -51,22 +52,32 @@
                 android:paddingBottom="2dp"
                 android:textSize="12dp" />
 
-            <TextView
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/releasedate"
+                    android:id="@+id/shimmer">
+
+
+                <TextView
                 android:id="@+id/director"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:textColor="#7F848A"
+                    android:background="@drawable/rectangle_shape"
                 android:layout_below="@+id/releasedate"
-                android:text="Directed By  .  "
+                tools:text="Directed By  .  "
                 android:paddingBottom="5dp"
                 android:textSize="15dp" />
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
             <View
                 android:id="@+id/line"
                 android:layout_width="250dp"
                 android:layout_height="0dp"
-                android:layout_below="@+id/director"
+                android:layout_below="@+id/shimmer"
                 android:background="@color/black"
                 android:paddingBottom="0dp" />
 

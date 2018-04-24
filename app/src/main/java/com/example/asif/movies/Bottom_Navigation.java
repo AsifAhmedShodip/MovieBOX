@@ -16,6 +16,9 @@ import android.view.WindowManager;
 import com.example.asif.movies.BrowseMovies.BrowseMovies;
 import com.example.asif.movies.BrowseMovies.PopularMovies;
 import com.example.asif.movies.Fragments.WishList;
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
 public class Bottom_Navigation extends AppCompatActivity {
 
@@ -41,6 +44,12 @@ public class Bottom_Navigation extends AppCompatActivity {
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
         //toolbar.setTitle("Shop");
+
+        AppUpdater appUpdater = new AppUpdater(this);
+        appUpdater.setUpdateFrom(UpdateFrom.GITHUB)
+                .setGitHubUserAndRepo("AsifAhmedShodip","MovieBOX")
+                .setDisplay(Display.DIALOG)
+                .start();
         loadFragment(new BrowseMovies());
     }
 

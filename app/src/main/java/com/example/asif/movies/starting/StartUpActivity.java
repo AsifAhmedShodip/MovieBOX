@@ -49,12 +49,6 @@ public class StartUpActivity extends AppCompatActivity {
         Animation animRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_up);
         screen.startAnimation(animRightIn);
 
-        AppUpdater appUpdater = new AppUpdater(this);
-        appUpdater.setUpdateFrom(UpdateFrom.GITHUB)
-                    .setGitHubUserAndRepo("AsifAhmedShodip","MovieBOX")
-                .setDisplay(Display.DIALOG)
-                .start();
-
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         String s_id = sharedpreferences.getString("Session_id","");

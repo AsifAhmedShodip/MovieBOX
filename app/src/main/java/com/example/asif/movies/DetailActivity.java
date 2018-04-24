@@ -54,6 +54,7 @@ import com.example.asif.movies.model.WatchListBody;
 import com.example.asif.movies.model.WatchListResponse;
 import com.example.asif.movies.model.MovieVideoResponse;
 import com.example.asif.movies.starting.StartUpActivity;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -86,6 +87,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     MoviesAdapter moviesAdapter;
     private boolean watchlistStatus,watchedMovieStatus,plot = false;
     String directorName;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -95,7 +97,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         movie = movieStatic;
         getSupportActionBar().setTitle(movie.getTitle());
@@ -119,6 +121,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         trailer = findViewById(R.id.trailer);
         recyclerView_cast = findViewById(R.id.recycler_cast);
         recyclerView_recom = findViewById(R.id.recycler_recom);
+        shimmerFrameLayout = findViewById(R.id.shimmer);
+
+        shimmerFrameLayout.startShimmerAnimation();
+
 
         progress=new ProgressDialog(this);
         progress.setMessage("Loading ...");
@@ -370,6 +376,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<OmdbMovieResponse> call, Response<OmdbMovieResponse> response) {
                 imdbRating.setText(response.body().getImdbRating());
+                shimmerFrameLayout.stopShimmerAnimation();
+                director.setBackground(null);
                 Log.d("Error", "response.raw().request().url();"+response.raw().request().url());
             }
 
