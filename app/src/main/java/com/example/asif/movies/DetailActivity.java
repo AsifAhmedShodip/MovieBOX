@@ -349,6 +349,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         final String poster = "https://image.tmdb.org/t/p/original" + backdropPath;
         Glide.with(this)
                 .load(poster)
+                .thumbnail(0.1f)
                 .apply(new RequestOptions()
                         .placeholder(R.drawable.loading)
                         .centerCrop()
