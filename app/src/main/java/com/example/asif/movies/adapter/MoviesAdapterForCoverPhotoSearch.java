@@ -11,13 +11,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.asif.movies.BrowseMovies.BrowseMovies;
 import com.example.asif.movies.Profile.DetailActivityForCoverPhoto;
 import com.example.asif.movies.R;
 import com.example.asif.movies.model.Movie;
 
 import java.util.List;
-
-import static com.example.asif.movies.BrowseMovies.BrowseMovies.movieStatic;
 /**
  * Created by asif on 07-Apr-18.
  */
@@ -72,7 +71,7 @@ public class MoviesAdapterForCoverPhotoSearch extends RecyclerView.Adapter<Movie
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION){
                         Movie clickedDataItem = movieList.get(pos);
-                        movieStatic = clickedDataItem;
+                        BrowseMovies.movieStatic = clickedDataItem;
                         Intent intent = new Intent(mContext, DetailActivityForCoverPhoto.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("Movie Id",clickedDataItem.getId());

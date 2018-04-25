@@ -67,8 +67,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.asif.movies.BrowseMovies.BrowseMovies.movieStatic;
-
 /**
  * Created by asif on 30-Mar-18.
  */
@@ -100,7 +98,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        movie = movieStatic;
+        movie = getIntent().getParcelableExtra("movie_clicked");
         getSupportActionBar().setTitle(movie.getTitle());
         screen = findViewById(R.id.main_content);
         initCollapsingToolbar();
@@ -241,9 +239,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void settingUpDetailsForMovie() {
 
         setBackdrop(movie.getBackdropPath());
-        setMovieGenre(movie.getGenres());
+        //setMovieGenre(movie.getGenres());
         //setPoster(movie.getPosterPath());
-        plotSynopsis.setText(movie.getOverview());
+        //plotSynopsis.setText(movie.getOverview());
 
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
@@ -252,10 +250,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movieDetails = response.body();
-                //setMovieGenre(response.body().getGenres());
+                setMovieGenre(response.body().getGenres());
                 if(response.body().getRuntime()!= null)// have to modify
                     setMovieYearAndRuntime(response.body().getReleaseDate(),response.body().getRuntime());
-                //plotSynopsis.setText(response.body().getOverview());
+                plotSynopsis.setText(response.body().getOverview());
                 //setBackdrop(response.body().getBackdropPath());
                 //setPoster(response.body().getPosterPath());
                 setImdbRating(response.body().getImdbId());
@@ -267,7 +265,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 progress.dismiss();
-                Log.d("Error", t.getMessage());
+//                Log.d("Error", t.getMessage());
                 Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
 
             }
@@ -293,7 +291,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progress.dismiss();
-                Log.d("Error", t.getMessage());
+                //Log.d("Error", t.getMessage()+);
                 Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
 
             }
@@ -334,13 +332,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void setPoster(Object posterPath) {
+    private void setPoster(String posterPath) {
         final String path = "https://image.tmdb.org/t/p/w500" + posterPath;
         Glide.with(this)
                 .load(path)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.load)
-                        .centerCrop())
+                .apply(new RequestOptions())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
