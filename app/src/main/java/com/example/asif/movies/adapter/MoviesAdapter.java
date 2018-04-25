@@ -23,23 +23,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.asif.movies.BrowseMovies.BrowseMovies;
 import com.example.asif.movies.BrowseMovies.NowPlayingMovies;
 import com.example.asif.movies.BuildConfig;
 import com.example.asif.movies.DetailActivity;
 import com.example.asif.movies.Dialouge.DialogMenu;
 import com.example.asif.movies.Dialouge.Long_pressed_dialouge;
 import com.example.asif.movies.R;
-import com.example.asif.movies.WebView_Link.BrowserWebview;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
 import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.model.AccountStates;
 import com.example.asif.movies.model.Movie;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.asif.movies.BrowseMovies.BrowseMovies;
 import com.example.asif.movies.model.OmdbMovieResponse;
 import com.example.asif.movies.starting.StartUpActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +42,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,10 +57,9 @@ import static com.example.asif.movies.starting.StartUpActivity.seenMovies;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder>{
 
+    final String[] totalCount = new String[1];
     String movieCount;
     boolean watchedMovieStatus = false;
-    final String[] totalCount = new String[1];
-
     private Context mContext;
     private List<Movie> movieList;
 
@@ -108,8 +104,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             public void onClick(View v){
                     Movie clickedDataItem = movieList.get(i);
                     BrowseMovies.movieStatic = clickedDataItem;
+
                     Intent intent = new Intent(mContext, DetailActivity.class);
-                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,viewHolder.thumbnail,"poster");
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,
+                        viewHolder.thumbnail, clickedDataItem.getId().toString());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent,optionsCompat.toBundle());
                     //((Activity)mContext).overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
@@ -194,20 +192,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         return movieList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, userrating;
-        ImageButton seen;
-        public ImageView thumbnail;
-
-        public MyViewHolder(View view){
-            super(view);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
-            seen = view.findViewById(R.id.beenhere);
-
-           // seen.setVisibility(View.GONE);
-        }
-    }
-
     private void checkWatchedMoviesStatus(final int movieID , final Long_pressed_dialouge Long_pressed_dialouge) { // implemented in firebase
         final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Users")
                 .child(AccountDetails.getCurrentUser().getUsername());
@@ -281,7 +265,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         });
     }
 
-
     public void checkWatchListStatus(int id,final Long_pressed_dialouge Long_pressed_dialouge) {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
@@ -353,6 +336,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             databaseUsers2.setValue(String.valueOf(time[0]));
             if(!StartUpActivity.seenMovies.contains(Movie.getCurrentMovieInLongPressed().getId().toString()))
                 StartUpActivity.seenMovies.add(Movie.getCurrentMovieInLongPressed().getId().toString());
+        }
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView title, userrating;
+        public ImageView thumbnail;
+        ImageButton seen;
+
+        public MyViewHolder(View view) {
+            super(view);
+            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            seen = view.findViewById(R.id.beenhere);
+
+            // seen.setVisibility(View.GONE);
         }
     }
 }

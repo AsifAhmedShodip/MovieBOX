@@ -5,53 +5,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.asif.movies.Profile.EditCoverPhoto;
 import com.example.asif.movies.R;
 import com.example.asif.movies.SearchActivity;
 import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.starting.LogIn;
-import com.example.asif.movies.Fragments.WishList;
-import com.example.asif.movies.Profile.EditCoverPhoto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BrowseMovies extends Fragment {
 
-    public BrowseMovies(){}
-
-    private ViewPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
     public static Movie movieStatic;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private ImageView profile_pic , cover_photo;
     SharedPreferences sharedpreferences;
     AppBarLayout appBarLayout;
     Toolbar toolbar;
+    private ViewPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private TabLayout tabLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private ImageView profile_pic , cover_photo;
+
+    public BrowseMovies() {
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("RestrictedApi")
@@ -107,11 +105,23 @@ public class BrowseMovies extends Fragment {
         sharedpreferences = (getActivity()).getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         String cover = sharedpreferences.getString("Cover Photo","");
+        String poster0 = "https://image.tmdb.org/t/p/w300" + cover;
+        Glide.with(BrowseMovies.this)
+                .load(poster0)
+                .thumbnail(0.1f)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.load)
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform())
+                .into(cover_photo);
+
         String poster = "https://image.tmdb.org/t/p/original" + cover;
         Log.d("Error", poster);
 
         Glide.with(BrowseMovies.this)
                 .load(poster)
+                .thumbnail(0.1f)
                 .apply(new RequestOptions()
                         .placeholder(R.drawable.load)
                         .centerCrop()
@@ -174,6 +184,16 @@ public class BrowseMovies extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    /*@Override
+    public void onBackPressed() {
+        (getActivity()).moveTaskToBack(true);
+        getActivity().finish();
+    }*/
 
     private static class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -202,16 +222,5 @@ public class BrowseMovies extends Fragment {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    /*@Override
-    public void onBackPressed() {
-        (getActivity()).moveTaskToBack(true);
-        getActivity().finish();
-    }*/
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }
