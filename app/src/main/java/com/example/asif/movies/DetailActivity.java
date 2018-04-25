@@ -8,11 +8,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,26 +33,25 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.example.asif.movies.BrowseMovies.BrowseMovies;
 import com.example.asif.movies.Dialouge.DialogMenu;
 import com.example.asif.movies.Profile.DetailActivityForCoverPhoto;
+import com.example.asif.movies.WebView_Link.BrowserWebview;
 import com.example.asif.movies.WebView_Link.SignUpWebview;
 import com.example.asif.movies.adapter.CastAdapter;
 import com.example.asif.movies.adapter.MoviesAdapter;
-import com.example.asif.movies.model.Account.AccountDetails;
-import com.example.asif.movies.WebView_Link.BrowserWebview;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
+import com.example.asif.movies.model.Account.AccountDetails;
 import com.example.asif.movies.model.AccountStates;
 import com.example.asif.movies.model.Cast_crew.CastResponse;
 import com.example.asif.movies.model.Genre;
 import com.example.asif.movies.model.Movie;
 import com.example.asif.movies.model.MovieVideo;
+import com.example.asif.movies.model.MovieVideoResponse;
 import com.example.asif.movies.model.MoviesResponse;
 import com.example.asif.movies.model.OmdbMovieResponse;
 import com.example.asif.movies.model.WatchListBody;
 import com.example.asif.movies.model.WatchListResponse;
-import com.example.asif.movies.model.MovieVideoResponse;
 import com.example.asif.movies.starting.StartUpActivity;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -67,7 +66,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import static com.example.asif.movies.BrowseMovies.BrowseMovies.movieStatic;
 
 /**
  * Created by asif on 30-Mar-18.
@@ -76,7 +74,6 @@ import static com.example.asif.movies.BrowseMovies.BrowseMovies.movieStatic;
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener{
     TextView nameOfMovie, plotSynopsis, userRating, releaseYear,imdbRating,wiki,imdbLink ,trailer,director;
     ImageView imageView , poster;
-    private ProgressDialog progress;
     TextView genres,watched , list , wish;
     Movie movie,movieDetails;
     String movieCount = "0",totalCount = "0";
@@ -85,21 +82,23 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     RecyclerView recyclerView_cast ,recyclerView_recom;
     CastAdapter castAdapter ,castAdapter2;
     MoviesAdapter moviesAdapter;
-    private boolean watchlistStatus,watchedMovieStatus,plot = false;
     String directorName;
     ShimmerFrameLayout shimmerFrameLayout;
+    private ProgressDialog progress;
+    private boolean watchlistStatus, watchedMovieStatus, plot = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        supportPostponeEnterTransition();
         StatusBarUtil.setTransparent(DetailActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        movie = movieStatic;
+        movie = getIntent().getParcelableExtra("movie_clicked");
         getSupportActionBar().setTitle(movie.getTitle());
         screen = findViewById(R.id.main_content);
         initCollapsingToolbar();
@@ -122,6 +121,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         recyclerView_cast = findViewById(R.id.recycler_cast);
         recyclerView_recom = findViewById(R.id.recycler_recom);
         shimmerFrameLayout = findViewById(R.id.shimmer);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            poster.setTransitionName(movie.getId().toString());
+            setPoster(movie.getPosterPath());
+        }
 
         shimmerFrameLayout.startShimmerAnimation();
 
@@ -181,6 +184,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+
         watched.setOnClickListener(this);
         wish.setOnClickListener(this);
         list.setOnClickListener(this);
@@ -233,6 +237,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void settingUpDetailsForMovie() {
+
+        setBackdrop(movie.getBackdropPath());
+        //setMovieGenre(movie.getGenres());
+        //setPoster(movie.getPosterPath());
+        //plotSynopsis.setText(movie.getOverview());
+
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
         Call<Movie> call = apiService.getMovieDetails(movie.getId(),BuildConfig.THE_MOVIE_DB_API_TOKEN);
@@ -244,8 +254,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 if(response.body().getRuntime()!= null)// have to modify
                     setMovieYearAndRuntime(response.body().getReleaseDate(),response.body().getRuntime());
                 plotSynopsis.setText(response.body().getOverview());
-                setBackdrop(response.body().getBackdropPath());
-                setPoster(response.body().getPosterPath());
+                //setBackdrop(response.body().getBackdropPath());
+                //setPoster(response.body().getPosterPath());
                 setImdbRating(response.body().getImdbId());
                 setCast(response.body().getId());
                 setRecomendations(response.body().getId());
@@ -255,7 +265,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 progress.dismiss();
-                Log.d("Error", t.getMessage());
+//                Log.d("Error", t.getMessage());
                 Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
 
             }
@@ -281,7 +291,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progress.dismiss();
-                Log.d("Error", t.getMessage());
+                //Log.d("Error", t.getMessage()+);
                 Toast.makeText(DetailActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
 
             }
@@ -322,15 +332,24 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void setPoster(Object posterPath) {
+    private void setPoster(String posterPath) {
         final String path = "https://image.tmdb.org/t/p/w500" + posterPath;
         Glide.with(this)
                 .load(path)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.load)
-                        .centerCrop()
-                        .dontAnimate()
-                        .dontTransform())
+                .apply(new RequestOptions())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                    }
+                })
                 .into(poster);
 
         /*supportPostponeEnterTransition();

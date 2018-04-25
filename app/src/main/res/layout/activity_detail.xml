@@ -19,11 +19,11 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="256dp"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             android:fitsSystemWindows="true"
             app:contentScrim="#00000000"
-            app:statusBarScrim="#00000000"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="#00000000">
 
 
             <ImageView
@@ -81,10 +81,9 @@
         app:layout_anchorGravity="bottom|right|end"/>-->
 
     <ImageView
+        android:id="@+id/poster"
         android:layout_width="90dp"
         android:layout_height="130dp"
-        android:id="@+id/poster"
-        android:transitionName="poster"
         android:layout_marginRight="10dp"
         android:scaleType="fitXY"
         app:layout_anchor="@id/appbar"
