@@ -1,283 +1,473 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/ash"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.asif.movies.MainActivity"
     tools:showIn="@layout/activity_detail">
 
     <LinearLayout
+        android:id="@+id/ad"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ad">
+        android:layout_height="wrap_content">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:showIn="@layout/activity_detail">
-
-        <android.support.constraint.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            tools:showIn="@layout/activity_detail">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/genre"
-                android:layout_marginLeft="0dp"
-                android:textSize="12dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="7dp"
-                android:paddingBottom="2dp"
-                android:text="Genres"
-                android:textColor="#7F848A"
-                android:layout_marginStart="1dp" />
-
-            <TextView
-                android:id="@+id/releasedate"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:textColor="#7F848A"
-                android:layout_below="@+id/genre"
-                android:text="Year  .  Time"
-                android:paddingBottom="2dp"
-                android:textSize="12dp" />
-
-
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/releasedate"
-                    android:id="@+id/shimmer">
-
-
-                <TextView
-                android:id="@+id/director"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:textColor="#7F848A"
-                    android:background="@drawable/rectangle_shape"
-                android:layout_below="@+id/releasedate"
-                tools:text="Directed By  .  "
-                android:paddingBottom="5dp"
-                android:textSize="15dp" />
-                </com.facebook.shimmer.ShimmerFrameLayout>
-
-            <View
-                android:id="@+id/line"
-                android:layout_width="250dp"
-                android:layout_height="0dp"
-                android:layout_below="@+id/shimmer"
-                android:background="@color/black"
-                android:paddingBottom="0dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_weight="5"
-                    android:id="@+id/linear2"
-                    android:layout_below="@+id/line"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
-
-
-                    <TextView
-                        android:id="@+id/watched"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_eye_white"
-                        android:layout_marginRight="0dp"
-                        android:text="Watched"
-                        android:gravity="center"
-                        android:textColor="#7F848A"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp" />
-
-                    <TextView
-                        android:id="@+id/wish"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Wishlist"
-                        android:textColor="#7F848A"
-                        android:drawableTop="@drawable/ic_wish_white"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"/>
-
-                    <TextView
-                        android:id="@+id/list"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="List"
-                        android:textColor="#7F848A"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:drawableTop="@drawable/ic_list"
-                        android:layout_marginLeft="10dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp" />
-
-                    <TextView
-                        android:id="@+id/imdbrating"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:drawableTop="@drawable/ic_star"
-                        android:text="   "
-                        android:textColor="#7F848A"
-                        android:textSize="20dp" />
-
-                </LinearLayout>
-
-                <!--<ImageView
-                android:layout_width="90dp"
-                android:layout_height="130dp"
-                    android:layout_below="@+id/linear2"
-                android:id="@+id/poster"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                android:scaleType="fitXY"/>-->
-
-
-            <TextView
-                android:id="@+id/plotsynopsis"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:ellipsize="end"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/linear2"
-                android:maxLines="3"
-                android:layout_toRightOf="@+id/poster"
-                android:layout_gravity="center_vertical|right"
-                android:padding="10dp"
-                android:text="Something Something Something Something Something "
-                android:textColor="#7F848A"
-                android:textSize="15sp"
-                android:textStyle="normal" />
-
-                <LinearLayout
-                    android:layout_width="170dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_weight="5"
-                    android:id="@+id/linear"
-                    android:layout_below="@+id/plotsynopsis"
-                    android:layout_toRightOf="@+id/poster"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal" >
-
-
-                    <TextView
-                        android:id="@+id/trailer"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/trailer"
-                        android:layout_marginRight="10dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp" />
-
-
-                    <TextView
-                        android:id="@+id/wiki"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/wikipedia50"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"/>
-
-
-                    <TextView
-                        android:id="@+id/imdblink"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/imdb48"
-                        android:layout_marginLeft="10dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp" />
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/line3"
-                    android:layout_width="250dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_below="@+id/linear"
-                    android:background="@color/black"
-                    android:paddingBottom="0dp" />
-
-                <TextView
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/line3"
-                    android:text="Actors"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:textSize="10dp"
-                    android:textColor="#7F848A"
-                    android:id="@+id/textViewCast"/>
+                    android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_cast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
-                    android:layout_marginLeft="7dp"
-                    android:layout_below="@+id/textViewCast"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/recycler_cast"
-                    android:text="Recomendations"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:textSize="10dp"
-                    android:textColor="#7F848A"
-                    android:id="@+id/recom"/>
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmer_genre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="110dp">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_recom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
-                    android:layout_marginLeft="7dp"
-                    android:layout_below="@+id/recom"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                        <TextView
+                            android:id="@+id/genre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginStart="1dp"
+                            android:background="@drawable/rectangle_shape"
+                            android:paddingBottom="3dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:textSize="12dp" />
 
-                </android.support.v7.widget.RecyclerView>
-            </RelativeLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
 
-        </android.support.constraint.ConstraintLayout>
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmer_releaseDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/shimmer_genre"
+                        android:layout_marginRight="110dp">
 
-    </ScrollView>
+                        <TextView
+                            android:id="@+id/releasedate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/genre"
+                            android:background="@drawable/rectangle_shape"
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="10dp"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/trailer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="100dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_toLeftOf="@+id/releasedate"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="8dp"
+                            android:text=""
+                            android:textColor="#7f848a"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmer_director"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/shimmer_releaseDate"
+                        android:layout_marginRight="110dp">
+
+
+                        <TextView
+                            android:id="@+id/director"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/releasedate"
+                            android:background="@drawable/rectangle_shape"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:textColor="#7F848A"
+                            android:textSize="15dp"
+                            tools:text="" />
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <View
+                        android:id="@+id/line"
+                        android:layout_width="250dp"
+                        android:layout_height="0dp"
+                        android:layout_below="@+id/shimmer_director"
+                        android:background="@color/black"
+                        android:paddingBottom="0dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="0dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@color/twitter"
+                        android:layout_weight="5"
+                        android:id="@+id/linear_rating"
+                        android:layout_below="@+id/line"
+                        android:gravity="center"
+                        android:orientation="horizontal" >
+
+
+                        <ImageView
+                            android:id="@+id/imdb"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/imdb_logo"
+                            android:layout_marginRight="0dp"
+                            android:text=""
+                            android:gravity="center"
+                            android:textColor="#7F848A"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+
+
+                        <ImageView
+                            android:id="@+id/rotten"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:src="@drawable/rotten"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"/>
+
+                        <ImageView
+                            android:id="@+id/tmdb"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:src="@drawable/custom_tmdb"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"/>
+
+                        <ImageView
+                            android:id="@+id/meta"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:text="List"
+                            android:textColor="#7F848A"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:src="@drawable/metacritic"
+                            android:layout_marginLeft="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@color/twitter"
+                        android:layout_weight="5"
+                        android:id="@+id/linear_rating_text"
+                        android:layout_below="@+id/linear_rating"
+                        android:gravity="center"
+                        android:orientation="horizontal" >
+
+
+                        <TextView
+                            android:id="@+id/imdbrating"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/imdb_logo"
+                            android:layout_marginRight="0dp"
+                            android:text=""
+                            android:textSize="20dp"
+                            android:gravity="center"
+                            android:textColor="#7F848A"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+
+
+                        <TextView
+                            android:id="@+id/rottenrating"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:textSize="20dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tmdbrating"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:textSize="20dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"/>
+
+                        <TextView
+                            android:id="@+id/metarating"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:layout_weight="1"
+                            android:textSize="20dp"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/linear2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linear_rating_text"
+                        android:layout_marginBottom="0dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="5"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/watched"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="0dp"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/ic_eye_white"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Watched"
+                            android:textColor="#7F848A" />
+
+                        <TextView
+                            android:id="@+id/wish"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/ic_wish_white"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Wishlist"
+                            android:textColor="#7F848A" />
+
+                        <TextView
+                            android:id="@+id/list"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/ic_list"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="List"
+                            android:textColor="#7F848A" />
+<!--
+                        <TextView
+                            android:id="@+id/imdbrating"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/ic_star"
+                            android:gravity="center"
+                            android:text="   "
+                            android:textColor="#7F848A"
+                            android:textSize="20dp" />-->
+
+                    </LinearLayout>
+
+                    <!--<ImageView
+                    android:layout_width="90dp"
+                    android:layout_height="130dp"
+                        android:layout_below="@+id/linear2"
+                    android:id="@+id/poster"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                    android:scaleType="fitXY"/>-->
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmer_plot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linear2"
+                        android:layout_marginRight="10dp">
+
+
+                        <TextView
+                            android:id="@+id/plotsynopsis"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/linear2"
+                            android:layout_gravity="center_vertical|right"
+                            android:layout_marginTop="0dp"
+                            android:layout_toRightOf="@+id/poster"
+                            android:background="@drawable/rectangle_shape"
+                            android:ellipsize="end"
+                            android:maxLines="3"
+                            android:padding="10dp"
+                            android:text=""
+                            android:textColor="#7F848A"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear"
+                        android:layout_width="160dp"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/shimmer_plot"
+                        android:layout_weight="5"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+<!--
+                        <TextView
+                            android:id="@+id/trailer"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/trailer"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />-->
+
+
+                        <TextView
+                            android:id="@+id/wiki"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/wikipedia50"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+
+
+                        <TextView
+                            android:id="@+id/imdblink"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/imdb48"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/line3"
+                        android:layout_width="250dp"
+                        android:layout_height="0dp"
+                        android:layout_below="@+id/linear"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black"
+                        android:paddingBottom="0dp" />
+
+                    <TextView
+                        android:id="@+id/textViewCast"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/line3"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Actors"
+                        android:textColor="#7F848A"
+                        android:textSize="10dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_cast"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/textViewCast"
+                        android:layout_marginLeft="7dp"
+                        android:scrollbars="horizontal" />
+
+                    <TextView
+                        android:id="@+id/recom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/recycler_cast"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Recomendations"
+                        android:textColor="#7F848A"
+                        android:textSize="10dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_recom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/recom"
+                        android:layout_marginLeft="7dp"
+                        android:scrollbars="horizontal">
+
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 

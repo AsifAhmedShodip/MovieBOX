@@ -10,5 +10,8 @@
     <color name="black">#000000</color>
     <color name="ash">#181B20</color>
     <color name="ratingColor">#DEB92C</color>
+    <color name="transparent">#00000000</color>
+    <color name="twitter_header">#243447</color>
+    <color name="twitter">#1B2836</color>
 
 </resources>

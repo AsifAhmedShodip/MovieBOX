@@ -155,6 +155,10 @@ public class Movie implements Parcelable {
         }
     }
 
+    public Movie(){
+
+    }
+
     public static Movie getCurrentMovieInLongPressed() {
         return currentMovieInLongPressed;
     }

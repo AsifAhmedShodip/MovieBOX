@@ -1,5 +1,6 @@
 package com.example.asif.movies;
 
+import android.animation.Animator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -23,6 +25,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +37,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.ViewPropertyTransition;
 import com.example.asif.movies.Dialouge.DialogMenu;
 import com.example.asif.movies.Profile.DetailActivityForCoverPhoto;
 import com.example.asif.movies.WebView_Link.BrowserWebview;
@@ -71,27 +76,30 @@ import retrofit2.Response;
  * Created by asif on 30-Mar-18.
  */
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener{
-    TextView nameOfMovie, plotSynopsis, userRating, releaseYear,imdbRating,wiki,imdbLink ,trailer,director;
-    ImageView imageView , poster;
-    TextView genres,watched , list , wish;
-    Movie movie,movieDetails;
-    String movieCount = "0",totalCount = "0";
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+    TextView nameOfMovie, plotSynopsis, userRating, releaseYear, imdbRating, wiki, imdbLink, trailer, director;
+    TextView tmdb,rotten,meta;
+    ImageView imageView, poster;
+    TextView genres, watched, list, wish;
+    Movie movie, movieDetails;
+    String movieCount = "0", totalCount = "0";
     CoordinatorLayout screen;
     String session_id;
-    RecyclerView recyclerView_cast ,recyclerView_recom;
-    CastAdapter castAdapter ,castAdapter2;
+    RecyclerView recyclerView_cast, recyclerView_recom;
+    CastAdapter castAdapter, castAdapter2;
     MoviesAdapter moviesAdapter;
     String directorName;
-    ShimmerFrameLayout shimmerFrameLayout;
+    ShimmerFrameLayout shimmerDirector , shimmerPlot , shimmerGenre , shimmerRelease;
     private ProgressDialog progress;
     private boolean watchlistStatus, watchedMovieStatus, plot = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         supportPostponeEnterTransition();
+
         StatusBarUtil.setTransparent(DetailActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,7 +109,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         movie = getIntent().getParcelableExtra("movie_clicked");
         getSupportActionBar().setTitle(movie.getTitle());
         screen = findViewById(R.id.main_content);
-        initCollapsingToolbar();
 
         imageView = (ImageView) findViewById(R.id.thumbnail_image_header);
         director = findViewById(R.id.director);
@@ -120,16 +127,63 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         trailer = findViewById(R.id.trailer);
         recyclerView_cast = findViewById(R.id.recycler_cast);
         recyclerView_recom = findViewById(R.id.recycler_recom);
-        shimmerFrameLayout = findViewById(R.id.shimmer);
+        tmdb = findViewById(R.id.tmdbrating);
+        rotten = findViewById(R.id.rottenrating);
+        meta = findViewById(R.id.metarating);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             poster.setTransitionName(movie.getId().toString());
             setPoster(movie.getPosterPath());
         }
 
-        shimmerFrameLayout.startShimmerAnimation();
+        initCollapsingToolbar();
 
 
-        progress=new ProgressDialog(this);
+        shimmerDirector = findViewById(R.id.shimmer_director);
+        shimmerRelease = findViewById(R.id.shimmer_releaseDate);
+        shimmerGenre = findViewById(R.id.shimmer_genre);
+        shimmerPlot = findViewById(R.id.shimmer_plot);
+
+        shimmerDirector.startShimmerAnimation();
+        shimmerPlot.startShimmerAnimation();
+        shimmerGenre.startShimmerAnimation();
+        shimmerRelease.startShimmerAnimation();
+
+        final View mView = findViewById(R.id.thumbnail_image_header); // thumbnail_image_header is an imageView
+
+        mView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(final View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                view.removeOnLayoutChangeListener(this);
+
+                //Add circular revel animation on activity start
+                mView.post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void run() {
+                        //Your Animation Code
+                        int cx =  view.getRight();
+                        int cy = view.getBottom();
+
+                        // get the final radius for the clipping circle
+                        int dx = Math.max(cx, view.getWidth() - cx);
+                        int dy = Math.max(cy, view.getHeight() - cy);
+                        float finalRadius = (float) Math.hypot(dx, dy);
+
+                        // Android native animator
+                        Animator animator =
+                                ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
+                        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animator.setDuration(1500);
+                        animator.start();
+                    }
+                });
+
+            }
+        });
+
+
+        progress = new ProgressDialog(this);
         progress.setMessage("Loading ...");
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
@@ -142,7 +196,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         SharedPreferences sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        session_id = sharedpreferences.getString("Session_id","");
+        session_id = sharedpreferences.getString("Session_id", "");
 
         checkWatchedMoviesStatus();
         checkWatchListStatus();
@@ -165,10 +219,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick(View v) {
                 String url = "https://en.wikipedia.org/wiki/";
                 String movieName = movie.getTitle().trim();
-                movieName.replace(" ","_");
-                Intent intent = new Intent(getApplicationContext(),BrowserWebview.class);
-                intent.putExtra("url",url+movieName);
-                intent.putExtra("movie name" , movieName);
+                movieName.replace(" ", "_");
+                Intent intent = new Intent(getApplicationContext(), BrowserWebview.class);
+                intent.putExtra("url", url + movieName);
+                intent.putExtra("movie name", movieName);
                 startActivity(intent);
             }
         });
@@ -176,7 +230,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         trailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "http://www.youtube.com/watch?v="+MovieVideo.getMovieVideo().getKey();
+                String url = "http://www.youtube.com/watch?v=" + MovieVideo.getMovieVideo().getKey();
                 Log.d("url   ** ", url);
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
@@ -195,13 +249,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void getTrailer() {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<MovieVideoResponse> call = apiService.getMovieVideoResponse(movie.getId(),BuildConfig.THE_MOVIE_DB_API_TOKEN);
+        Call<MovieVideoResponse> call = apiService.getMovieVideoResponse(movie.getId(), BuildConfig.THE_MOVIE_DB_API_TOKEN);
         call.enqueue(new Callback<MovieVideoResponse>() {
             @Override
             public void onResponse(Call<MovieVideoResponse> call, Response<MovieVideoResponse> response) {
                 List<MovieVideo> movieVideos = response.body().getResults();
-                for(int i = 0 ;i< movieVideos.size();i++){
-                    if(movieVideos.get(i).getSite().equals("YouTube")){
+                for (int i = 0; i < movieVideos.size(); i++) {
+                    if (movieVideos.get(i).getSite().equals("YouTube")) {
                         MovieVideo.setMovieVideo(movieVideos.get(i));
                         break;
                     }
@@ -219,17 +273,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void countTotalTime() {
-        final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Total Time");
+        final DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference().child("Total Time");
         databaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot users : dataSnapshot.getChildren())
-                {
-                    if(users.getKey().equals(AccountDetails.getCurrentUser().getUsername()))
+                for (DataSnapshot users : dataSnapshot.getChildren()) {
+                    if (users.getKey().equals(AccountDetails.getCurrentUser().getUsername()))
                         totalCount = users.getValue(String.class);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -239,26 +293,35 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void settingUpDetailsForMovie() {
 
         setBackdrop(movie.getBackdropPath());
-        //setMovieGenre(movie.getGenres());
-        //setPoster(movie.getPosterPath());
-        //plotSynopsis.setText(movie.getOverview());
 
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<Movie> call = apiService.getMovieDetails(movie.getId(),BuildConfig.THE_MOVIE_DB_API_TOKEN);
+        Call<Movie> call = apiService.getMovieDetails(movie.getId(), BuildConfig.THE_MOVIE_DB_API_TOKEN);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movieDetails = response.body();
                 setMovieGenre(response.body().getGenres());
-                if(response.body().getRuntime()!= null)// have to modify
-                    setMovieYearAndRuntime(response.body().getReleaseDate(),response.body().getRuntime());
+                if (response.body().getRuntime() != null)// have to modify
+                    setMovieYearAndRuntime(response.body().getReleaseDate(), response.body().getRuntime());
                 plotSynopsis.setText(response.body().getOverview());
-                //setBackdrop(response.body().getBackdropPath());
-                //setPoster(response.body().getPosterPath());
+                tmdb.setText(movieDetails.getVoteAverage().toString());
+                trailer.setText("TRAILER");
                 setImdbRating(response.body().getImdbId());
                 setCast(response.body().getId());
                 setRecomendations(response.body().getId());
+
+                shimmerDirector.stopShimmerAnimation();
+                director.setBackground(null);
+
+                shimmerGenre.stopShimmerAnimation();
+                genres.setBackground(null);
+
+                shimmerPlot.stopShimmerAnimation();
+                plotSynopsis.setBackground(null);
+
+                shimmerRelease.stopShimmerAnimation();
+                releaseYear.setBackground(null);
                 progress.dismiss();
             }
 
@@ -275,13 +338,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void setRecomendations(Integer id) {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<MoviesResponse> call = apiService.getRecomendations(id,BuildConfig.THE_MOVIE_DB_API_TOKEN,"en-US",1);
+        Call<MoviesResponse> call = apiService.getRecomendations(id, BuildConfig.THE_MOVIE_DB_API_TOKEN, "en-US", 1);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 moviesAdapter = new MoviesAdapter(DetailActivity.this, response.body().getMovies());
                 recyclerView_recom.smoothScrollToPosition(0);
-                recyclerView_recom.setLayoutManager(new LinearLayoutManager(DetailActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                recyclerView_recom.setLayoutManager(new LinearLayoutManager(DetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
                 recyclerView_recom.setItemAnimator(new DefaultItemAnimator());
                 recyclerView_recom.setAdapter(moviesAdapter);
                 moviesAdapter.notifyDataSetChanged();
@@ -301,21 +364,21 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void setCast(Integer id) {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<CastResponse> call = apiService.getCastDetails(id,BuildConfig.THE_MOVIE_DB_API_TOKEN);
+        Call<CastResponse> call = apiService.getCastDetails(id, BuildConfig.THE_MOVIE_DB_API_TOKEN);
         call.enqueue(new Callback<CastResponse>() {
             @Override
             public void onResponse(Call<CastResponse> call, Response<CastResponse> response) {
-                for(int i = 0; i<response.body().getCrew().size();i++){
-                    if(response.body().getCrew().get(i).getJob().equals("Director")){
+                for (int i = 0; i < response.body().getCrew().size(); i++) {
+                    if (response.body().getCrew().get(i).getJob().equals("Director")) {
                         directorName = response.body().getCrew().get(i).getName();
-                        String name = "<b>"+directorName+"</b>";
+                        String name = "Directed By  <b>" + directorName + "</b>";
                         director.append(Html.fromHtml(name));
                         break;
                     }
                 }
                 castAdapter = new CastAdapter(DetailActivity.this, response.body().getCast());
                 recyclerView_cast.smoothScrollToPosition(0);
-                recyclerView_cast.setLayoutManager(new LinearLayoutManager(DetailActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                recyclerView_cast.setLayoutManager(new LinearLayoutManager(DetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
                 recyclerView_cast.setItemAnimator(new DefaultItemAnimator());
                 recyclerView_cast.setAdapter(castAdapter);
                 castAdapter.notifyDataSetChanged();
@@ -365,40 +428,60 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setBackdrop(String backdropPath) {
+        final String poster0 = "https://image.tmdb.org/t/p/w300" + backdropPath;
+        Glide.with(this)
+                .load(poster0)
+                .thumbnail(0.1f)
+                .apply(new RequestOptions()
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform())
+                .into(imageView);
+
+
         final String poster = "https://image.tmdb.org/t/p/original" + backdropPath;
         Glide.with(this)
                 .load(poster)
                 .thumbnail(0.1f)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.loading)
                         .centerCrop()
                         .dontAnimate()
                         .dontTransform())
                 .into(imageView);
     }
 
-    private void setMovieYearAndRuntime(String releaseDate,int runtime) {
-        String [] dateParts = releaseDate.split("-");
+    private void setMovieYearAndRuntime(String releaseDate, int runtime) {
+        String[] dateParts = releaseDate.split("-");
         String year = dateParts[0];
-        if(runtime != 0){
+        if (runtime != 0) {
             int time = runtime;
             int hours = time / 60;
             int minutes = time % 60;
-            releaseYear.setText(year+"  .  "+hours+"h "+minutes+"m");
+            releaseYear.setText(year + "  .  " + hours + "h " + minutes + "m");
         }
     }
 
     private void setImdbRating(String imdbId) {
         Client Client = new Client();
         Service apiService = Client.getClientOmdb().create(Service.class);
-        Call<OmdbMovieResponse> call = apiService.getImdbRating(BuildConfig.THE_OMDB_API,imdbId);
+        Call<OmdbMovieResponse> call = apiService.getImdbRating(BuildConfig.THE_OMDB_API, imdbId);
         call.enqueue(new Callback<OmdbMovieResponse>() {
             @Override
             public void onResponse(Call<OmdbMovieResponse> call, Response<OmdbMovieResponse> response) {
                 imdbRating.setText(response.body().getImdbRating());
-                shimmerFrameLayout.stopShimmerAnimation();
-                director.setBackground(null);
-                Log.d("Error", "response.raw().request().url();"+response.raw().request().url());
+                boolean flag = false;
+                meta.setText(response.body().getMetascore());
+                for (int i = 0; i < response.body().getRatings().size(); i++) {
+                    if (response.body().getRatings().get(i).getSource().equals("Rotten Tomatoes")) {
+                        rotten.setText(response.body().getRatings().get(i).getValue());
+                        flag = true;
+                    }
+                }
+                if (!flag) {
+                    rotten.setText("N/A");
+                }
+
+                Log.d("Error", "response.raw().request().url();" + response.raw().request().url());
             }
 
             @Override
@@ -413,15 +496,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void gotoIMDB() {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<Movie> call = apiService.getMovieDetails(movie.getId(),BuildConfig.THE_MOVIE_DB_API_TOKEN);
+        Call<Movie> call = apiService.getMovieDetails(movie.getId(), BuildConfig.THE_MOVIE_DB_API_TOKEN);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
-                String url = "http://www.imdb.com/title/"+response.body().getImdbId()+"/";
-                Intent intent = new Intent(getApplicationContext(),BrowserWebview.class);
-                intent.putExtra("url",url);
-                intent.putExtra("imdb" , "imdb");
+                String url = "http://www.imdb.com/title/" + response.body().getImdbId() + "/";
+                Intent intent = new Intent(getApplicationContext(), BrowserWebview.class);
+                intent.putExtra("url", url);
+                intent.putExtra("imdb", "imdb");
                 startActivity(intent);
             }
 
@@ -436,13 +519,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setMovieGenre(List<Genre> genre) {
         String g = null;
-        for(int i =0; i< genre.size();i++)
-        {
-            if(i == 0)
+        for (int i = 0; i < genre.size(); i++) {
+            if (i == 0)
                 g = genre.get(i).getName();
-            else
-            {
-                g = g + " . "+genre.get(i).getName();
+            else {
+                g = g + " . " + genre.get(i).getName();
             }
         }
 
@@ -450,22 +531,20 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void checkWatchedMoviesStatus() { // implemented in firebase
-        final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Users")
+        final DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference().child("Users")
                 .child(AccountDetails.getCurrentUser().getUsername());
         databaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot users : dataSnapshot.getChildren())
-                {
-                    if(users.getKey().equals(String.valueOf(movie.getId()))) {
+                for (DataSnapshot users : dataSnapshot.getChildren()) {
+                    if (users.getKey().equals(String.valueOf(movie.getId()))) {
                         movieCount = users.getValue(String.class);
                         watchedMovieStatus = true;
-                        if(!movieCount.equals("0")) {
+                        if (!movieCount.equals("0")) {
                             watched.setText("x" + movieCount);
                             setTextViewDrawableColor(watched, R.color.colorAccent);
-                          }
-                        else {
+                        } else {
                             watched.setText("Watched");
                             setTextViewDrawableColor(watched, R.color.black);
                         }
@@ -473,6 +552,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -482,20 +562,21 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     public void checkWatchListStatus() {
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<AccountStates> call = apiService.getAccountStates( movie.getId(),BuildConfig.THE_MOVIE_DB_API_TOKEN, session_id);
+        Call<AccountStates> call = apiService.getAccountStates(movie.getId(), BuildConfig.THE_MOVIE_DB_API_TOKEN, session_id);
         call.enqueue(new Callback<AccountStates>() {
             @Override
             public void onResponse(Call<AccountStates> call, Response<AccountStates> response) {
                 watchlistStatus = response.body().getWatchlist();
-                if(watchlistStatus)
+                if (watchlistStatus)
                     setTextViewDrawableColor(wish, R.color.colorAccent);
 
-                Log.d("Errorhahaha", "response.raw().request().url()"+response.raw().request().url());
+                Log.d("Errorhahaha", "response.raw().request().url()" + response.raw().request().url());
             }
+
             @Override
             public void onFailure(Call<AccountStates> call, Throwable t) {
                 Log.d("Errorhahaha", call.request().url().toString());
-                Toast.makeText(DetailActivity.this,"Error States",  Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailActivity.this, "Error States", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -509,7 +590,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void initCollapsingToolbar(){
+    private void initCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle(movie.getTitle());
@@ -517,21 +598,21 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener(){
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
 
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset){
-                if (scrollRange == -1){
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                     poster.setVisibility(View.VISIBLE);
                 }
-                if (scrollRange + verticalOffset == 0){
+                if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(movie.getTitle());
                     isShow = true;
                     poster.setVisibility(View.GONE);
-                }else if (isShow){
+                } else if (isShow) {
                     collapsingToolbarLayout.setTitle(movie.getTitle());
                     isShow = false;
                     poster.setVisibility(View.VISIBLE);
@@ -555,17 +636,18 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 afterListPressed();
                 break;
             }
-            case R.id.thumbnail_image_header:{
+            case R.id.thumbnail_image_header: {
                 Intent intent = new Intent(DetailActivity.this, DetailActivityForCoverPhoto.class);
-                intent.putExtra("Movie Id",movie.getId());
+                intent.putExtra("Movie Id", movie.getId());
+                intent.putExtra("Movie Name",movie.getTitle());
                 startActivity(intent);
                 break;
             }
-            case R.id.director:{
+            case R.id.director: {
                 String url = "https://en.wikipedia.org/wiki/";
-                directorName.replace(" ","_");
-                Intent intent = new Intent(this,SignUpWebview.class); // we are using SignUpWebview Class becuase BrowserWebview is complex
-                intent.putExtra("url",url+directorName);
+                directorName.replace(" ", "_");
+                Intent intent = new Intent(this, SignUpWebview.class); // we are using SignUpWebview Class becuase BrowserWebview is complex
+                intent.putExtra("url", url + directorName);
                 startActivity(intent);
                 break;
             }
@@ -579,13 +661,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         final int[] count = {Integer.parseInt(movieCount)};
         final int[] time = new int[1];
         final String[] temp = new String[1];
-        final DatabaseReference databaseUsers= FirebaseDatabase.getInstance().getReference().child("Users")
+        final DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference().child("Users")
                 .child(AccountDetails.getCurrentUser().getUsername());
-        final DatabaseReference databaseUsers2= FirebaseDatabase.getInstance().getReference().child("Total Time")
+        final DatabaseReference databaseUsers2 = FirebaseDatabase.getInstance().getReference().child("Total Time")
                 .child(AccountDetails.getCurrentUser().getUsername());
 
 
-        if(!movieCount.equals("0")){
+        if (!movieCount.equals("0")) {
             DialogMenu dialogMenu = new DialogMenu(this);
             dialogMenu.setListener(new DialogMenu.OnDialogMenuListener() {
                 @Override
@@ -595,8 +677,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     time[0] = Integer.parseInt(totalCount) + movieDetails.getRuntime();
                     databaseUsers.child(String.valueOf(movie.getId())).setValue(temp[0]);
                     databaseUsers2.setValue(String.valueOf(time[0]));
-                    if(!StartUpActivity.seenMovies.contains(movie.getId().toString()))
-                            StartUpActivity.seenMovies.add(movie.getId().toString());
+                    if (!StartUpActivity.seenMovies.contains(movie.getId().toString()))
+                        StartUpActivity.seenMovies.add(movie.getId().toString());
                 }
 
                 @Override
@@ -606,20 +688,19 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     time[0] = Integer.parseInt(totalCount) - movieDetails.getRuntime();
                     databaseUsers.child(String.valueOf(movie.getId())).setValue(temp[0]);
                     databaseUsers2.setValue(String.valueOf(time[0]));
-                    if(!String.valueOf(time[0]).equals("0")) {//not working
+                    if (!String.valueOf(time[0]).equals("0")) {//not working
                         StartUpActivity.seenMovies.remove(movie.getId().toString());
                     }
                 }
             });
-        }
-        else{
+        } else {
             count[0]++;
             temp[0] = String.valueOf(count[0]);
             setTextViewDrawableColor(watched, R.color.colorAccent);
             time[0] = Integer.parseInt(totalCount) + movieDetails.getRuntime();
             databaseUsers.child(String.valueOf(movie.getId())).setValue(temp[0]);
             databaseUsers2.setValue(String.valueOf(time[0]));
-            if(!StartUpActivity.seenMovies.contains(movie.getId().toString()))
+            if (!StartUpActivity.seenMovies.contains(movie.getId().toString()))
                 StartUpActivity.seenMovies.add(movie.getId().toString());
         }
     }
@@ -628,32 +709,27 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         final WatchListBody watchListBody = new WatchListBody();
         watchListBody.setMediaId(movie.getId());
         watchListBody.setMediaType("movie");
-        if(watchlistStatus) {
+        if (watchlistStatus) {
             watchListBody.setWatchlist(false);
             setTextViewDrawableColor(wish, R.color.black);
-        }
-        else {
+        } else {
             watchListBody.setWatchlist(true);
             setTextViewDrawableColor(wish, R.color.colorAccent);
         }
 
         Client Client = new Client();
         Service apiService = Client.getClient().create(Service.class);
-        Call<WatchListResponse> call = apiService.postWatchList(BuildConfig.THE_MOVIE_DB_API_TOKEN,session_id,watchListBody);
+        Call<WatchListResponse> call = apiService.postWatchList(BuildConfig.THE_MOVIE_DB_API_TOKEN, session_id, watchListBody);
         call.enqueue(new Callback<WatchListResponse>() {
             @Override
             public void onResponse(Call<WatchListResponse> call, Response<WatchListResponse> response) {
                 Integer status = response.body().getStatusCode();
-                if(status == 1)
-                {
+                if (status == 1) {
                     watchlistStatus = true;
-                }
-                else if(status == 12)
-                {
-                    watchlistStatus=true;
-                }
-                else if(status == 13){
-                    watchlistStatus=false;
+                } else if (status == 12) {
+                    watchlistStatus = true;
+                } else if (status == 13) {
+                    watchlistStatus = false;
                 }
             }
 

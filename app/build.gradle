@@ -50,6 +50,15 @@ dependencies {
 
     compile 'com.jaeger.statusbarutil:library:1.4.0'
 
+
+    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true;
+    }
+
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+
+
 }
 
 

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.asif.movies.BuildConfig;
@@ -52,6 +53,8 @@ public class TopRated extends Fragment{
     ProgressBar progressBar;
     int totalPages = 10;
 
+    TextView sorryText,retry;
+
     public TopRated(){}
 
     @Override
@@ -60,6 +63,8 @@ public class TopRated extends Fragment{
         View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
         recyclerView =  view.findViewById(R.id.recycler);
         progressBar = view.findViewById(R.id.progress);
+        sorryText = view.findViewById(R.id.sorryText);
+        retry = view.findViewById(R.id.retry);
         loadJSON();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.main_content);
@@ -70,7 +75,7 @@ public class TopRated extends Fragment{
                 page = 0;
                 movies.clear();
                 loadJSON();
-                Toast.makeText(getActivity(), "Refreshed", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "Refreshed", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -131,11 +136,23 @@ public class TopRated extends Fragment{
             swipeContainer.setRefreshing(false);
         }
 
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page = 0;
+                movies.clear();
+                loadJSON();
+            }
+        });
+
         return view;
     }
 
     private void loadJSON(){
         progressBar.setVisibility(View.VISIBLE);
+        sorryText.setVisibility(View.GONE);
+        retry.setVisibility(View.GONE);
+
         try{
             if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
                 Toast.makeText(getActivity(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
@@ -167,8 +184,11 @@ public class TopRated extends Fragment{
                         swipeContainer.setRefreshing(false);
                     }
                     //pd.dismiss();
+                    progressBar.setVisibility(View.GONE);
+                    sorryText.setVisibility(View.VISIBLE);
+                    retry.setVisibility(View.VISIBLE);
                     Log.d("Error", t.getMessage());
-                    Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -176,6 +196,9 @@ public class TopRated extends Fragment{
             if (swipeContainer.isRefreshing()){
                 swipeContainer.setRefreshing(false);
             }
+            progressBar.setVisibility(View.GONE);
+            sorryText.setVisibility(View.VISIBLE);
+            retry.setVisibility(View.VISIBLE);
             Log.d("Error", e.getMessage());
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
         }

@@ -43,11 +43,12 @@ public class StartUpActivity extends AppCompatActivity {
         StatusBarUtil.setTransparent(this);
         appName = findViewById(R.id.MBOX);
         screen = findViewById(R.id.screen);
+
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/BerkshireSwash-Regular.ttf");
         appName.setTypeface(type);
-
+/*
         Animation animRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_up);
-        screen.startAnimation(animRightIn);
+        screen.startAnimation(animRightIn);*/
 
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -93,8 +94,8 @@ public class StartUpActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Animation animRotateIn_big = AnimationUtils.loadAnimation(this, R.anim.slide_in_up);
-        screen.startAnimation(animRotateIn_big);
+       /* Animation animRotateIn_big = AnimationUtils.loadAnimation(this, R.anim.slide_in_up);
+        screen.startAnimation(animRotateIn_big);*/
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         String s_id = sharedpreferences.getString("Session_id","");

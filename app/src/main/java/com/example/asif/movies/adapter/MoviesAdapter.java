@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.asif.movies.BrowseMovies.NowPlayingMovies;
@@ -86,16 +90,38 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     @Override
     public void onBindViewHolder(final MoviesAdapter.MyViewHolder viewHolder, final int i) {
 
+        //viewHolder.thumbnail.setVisibility(View.INVISIBLE);
+
+        //viewHolder.mName.setText(movieList.get(i).getTitle());
+
+        /*TextDrawable drawable = TextDrawable.builder()
+                .buildRoundRect("A", Color.RED,50);
+*/
+        //viewHolder.thumbnail.setImageDrawable(drawable);
+
+
         String poster = "https://image.tmdb.org/t/p/w500" + movieList.get(i).getPosterPath();
 
         Glide.with(mContext)
                 .load(poster)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.load)
+                        .placeholder(new ColorDrawable(Color.BLACK))
                         .centerCrop()
                         .dontAnimate()
                         .dontTransform())
                 .into(viewHolder.thumbnail);
+
+        //viewHolder.thumbnail.setVisibility(View.VISIBLE);
+
+       /* String backdrop =  "https://image.tmdb.org/t/p/w300" + movieList.get(i).getBackdropPath();
+        Glide.with(mContext)
+                .load(backdrop)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.load)
+                        .centerCrop()
+                        .dontAnimate()
+                        .dontTransform());
+        // .into(viewHolder.thumbnail);*/
 
         viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -106,10 +132,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,
-                        viewHolder.thumbnail, clickedDataItem.getId().toString());
+                                                            viewHolder.thumbnail, clickedDataItem.getId().toString());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("movie_clicked", clickedDataItem);
                 mContext.startActivity(intent, optionsCompat.toBundle());
+
+                ((Activity)mContext).overridePendingTransition(0,0);
                 //((Activity)mContext).overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
             }
         });
@@ -141,11 +169,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             }
         });
 
-        if (seenMovies.contains(movieList.get(i).getId().toString())) {
+        /*if (seenMovies.contains(movieList.get(i).getId().toString())) {
             viewHolder.seen.setVisibility(View.VISIBLE);
         } else if (!seenMovies.contains(movieList.get(i).getId().toString())) {
             viewHolder.seen.setVisibility(View.INVISIBLE);
-        }
+        }*/
 
         final DatabaseReference databaseUsers3 = FirebaseDatabase.getInstance().getReference().child("Total Time");
         databaseUsers3.addValueEventListener(new ValueEventListener() {
@@ -338,7 +366,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, userrating;
+        public TextView title, userrating,mName;
         public ImageView thumbnail;
         ImageButton seen;
 
@@ -346,8 +374,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             super(view);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             seen = view.findViewById(R.id.beenhere);
+            //mName = view.findViewById(R.id.movieName);
+            //thumbnail.setVisibility(View.INVISIBLE);
+            //mName.setVisibility(View.GONE);
 
-            // seen.setVisibility(View.GONE);
+            seen.setVisibility(View.GONE);
         }
     }
 }

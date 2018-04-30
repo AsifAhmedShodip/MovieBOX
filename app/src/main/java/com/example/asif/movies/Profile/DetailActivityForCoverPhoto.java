@@ -1,6 +1,7 @@
 package com.example.asif.movies.Profile;
 
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.asif.movies.BuildConfig;
 import com.example.asif.movies.R;
+import com.example.asif.movies.adapter.BackdropViewPagerAdapter;
 import com.example.asif.movies.adapter.MoviesAdapterForCoverPhoto;
 import com.example.asif.movies.api.Client;
 import com.example.asif.movies.api.Service;
@@ -25,32 +27,46 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailActivityForCoverPhoto extends AppCompatActivity {
-    private RecyclerView recyclerView;
+    ////private RecyclerView recyclerView;
     private MoviesAdapterForCoverPhoto adapter;
     private Integer movieId;
+    String movieTitle;
     private List<Backdrop> backdropList = new ArrayList<>();
+
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_for_cover_photo);
-        recyclerView =  findViewById(R.id.recycler);
+        //recyclerView =  findViewById(R.id.recycler);
+
+
+
+        viewPager = findViewById(R.id.viewPager);
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
 
         if(b!=null)
         {
             movieId = (int) b.get("Movie Id");
+            movieTitle = (String) b.get("Movie Name");
         }
+
+        getSupportActionBar().setTitle(movieTitle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadJSON();
     }
 
     private void initViews(List<Backdrop> backdrops) {
-        adapter = new MoviesAdapterForCoverPhoto(DetailActivityForCoverPhoto.this, backdrops);
+
+        BackdropViewPagerAdapter backdropViewPagerAdapter = new BackdropViewPagerAdapter(this, backdrops);
+        viewPager.setAdapter(backdropViewPagerAdapter   );
+        /*adapter = new MoviesAdapterForCoverPhoto(DetailActivityForCoverPhoto.this, backdrops);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
     }
     private void loadJSON(){
             Client Client = new Client();

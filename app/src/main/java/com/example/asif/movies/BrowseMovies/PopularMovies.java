@@ -168,7 +168,7 @@ public class PopularMovies extends Fragment{
                             swipeContainer.setRefreshing(false);
                         }
                         //pd.dismiss();
-                        Log.d("Error", t.getMessage());
+                       // Log.d("Error", t.getMessage());
                         Toast.makeText(getActivity(), "Error Fetching Data!", Toast.LENGTH_SHORT).show();
 
                     }
