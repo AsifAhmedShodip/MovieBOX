@@ -73,7 +73,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by asif on 30-Mar-18.fgbfgbsdgbdgb
+ * Created by asif on 30-Mar-18.fgbfgbsdgbdgbv xz xz zx 
  */
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
